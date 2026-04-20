@@ -1,5 +1,6 @@
 #include "state_manager.hpp"
 #include "../StateFactory/state_factory.hpp"
+#include "isr_manager.hpp"
 #include <cstdio>
 
 
@@ -28,6 +29,9 @@ bool StateManager::init() {
         state_context_.publish_log("[StateManager] CRITICAL: Failed to create EMERGENCY_STOP. Halting.");
         return false;
     }
+
+    // ISRManager に SBUS を登録し、DMA受信を開始する
+    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.sbus_uart);
 
     // 初期状態への遷移
     return changeState(init_state_id_) == StateChangeResult::SUCCESS;

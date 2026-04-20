@@ -1,0 +1,4 @@
+[submodule "Core/Lib/SBUS"]
+	path = Core/Lib/SBUS
+	url = https://github.com/NOKOLat/SBUS.git
+	branch = add_ringbuffer_lib

@@ -40,7 +40,11 @@
       "Bash(bash -c 'export PATH=\"\"D:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin:$PATH\"\" && arm-none-eabi-size PFLIGHT_26.elf')",
       "Bash(\"D:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/arm-none-eabi-size.exe\" PFLIGHT_26.elf)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git -C /c/LocalProject/STM32CubeIDE/LocalDev/PFLIGHT2 submodule status)",
+      "Bash(git -C /c/LocalProject/STM32CubeIDE/LocalDev/PFLIGHT2 submodule add:*)",
+      "Bash(git -C /c/LocalProject/STM32CubeIDE/LocalDev/PFLIGHT2 submodule update --init --recursive Core/Lib/SBUS)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }
