@@ -15,21 +15,39 @@ class StateFactory {
 
             switch (state_id) {
 
-                // --- 通常フロー ---
-                case StateID::IDLE:
-                    return std::make_unique<IdleState>();
+                // --- Init ---
+                case StateID::INIT:
+                    return std::make_unique<InitState>();
 
-                case StateID::STATE_A:
-                    return std::make_unique<StateA>();
+                case StateID::CALIBRATION:
+                    return std::make_unique<CalibrationState>();
 
-                case StateID::STATE_B:
-                    return std::make_unique<StateB>();
+                // --- PreArm ---
+                case StateID::PRE_ARM:
+                    return std::make_unique<PreArmState>();
 
-                // --- エラー状態 ---
-                case StateID::HARDWARE_ERROR:
-                    return std::make_unique<HardwareErrorState>();
+                case StateID::ARM:
+                    return std::make_unique<ArmState>();
 
-                // --- 緊急停止 ---
+                case StateID::PRE_FLIGHT:
+                    return std::make_unique<PreFlightState>();
+
+                // --- Flight ---
+                case StateID::FLIGHT:
+                    return std::make_unique<FlightState>();
+
+                case StateID::AUTO_FLIGHT:
+                    return std::make_unique<AutoFlightState>();
+
+                // --- PostFlight ---
+                case StateID::DIS_ARM:
+                    return std::make_unique<DisArmState>();
+
+                // --- Error ---
+                case StateID::ERROR:
+                    return std::make_unique<ErrorState>();
+
+                // --- フォールバック専用 ---
                 case StateID::EMERGENCY_STOP:
                     return std::make_unique<EmergencyStopState>();
 

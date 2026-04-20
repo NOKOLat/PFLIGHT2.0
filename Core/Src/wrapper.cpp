@@ -2,7 +2,7 @@
 #include "StateManager/state_manager.hpp"
 #include "usart.h"
 
-StateManager state_manager(StateID::IDLE);
+StateManager state_manager(StateID::INIT);
 
 void init(){
 

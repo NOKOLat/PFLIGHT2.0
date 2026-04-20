@@ -6,52 +6,118 @@
 #include "../common/state_context.hpp"
 
 
-class IdleState : public StateInterface {
-    
-    public:
-        virtual ~IdleState() = default;
-        StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
-        StateID     getStateID() const override;
+// --- Init ---
 
-};
-
-
-// STATE_A
-class StateA : public StateInterface {
+class InitState : public StateInterface {
 
     public:
-        virtual ~StateA() = default;
+        virtual ~InitState() = default;
         StateError  init(StateContext& context) override;
         StateResult update(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
-
-// STATE_B
-class StateB : public StateInterface {
+class CalibrationState : public StateInterface {
 
     public:
-        virtual ~StateB() = default;
+        virtual ~CalibrationState() = default;
         StateError  init(StateContext& context) override;
         StateResult update(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
 
+// --- PreArm ---
 
-// HARDWARE_ERROR
-class HardwareErrorState : public StateInterface {
+class PreArmState : public StateInterface {
 
     public:
-        virtual ~HardwareErrorState() = default;
+        virtual ~PreArmState() = default;
+        StateError  init(StateContext& context) override;
+        StateResult update(StateContext& context) override;
+        StateID     getStateID() const override;
+};
+
+class ArmState : public StateInterface {
+
+    public:
+        virtual ~ArmState() = default;
+        StateError  init(StateContext& context) override;
+        StateResult update(StateContext& context) override;
+        StateID     getStateID() const override;
+};
+
+class PreFlightState : public StateInterface {
+
+    public:
+        virtual ~PreFlightState() = default;
         StateError  init(StateContext& context) override;
         StateResult update(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
 
-// EMERGENCY_STOP
+// --- Flight ---
+
+class FlightStateBase : public StateInterface {
+
+    public:
+        virtual ~FlightStateBase() = default;
+        StateError  init(StateContext& context) final;
+        StateResult update(StateContext& context) final;
+
+    protected:
+        virtual StateError  onInit(StateContext& context)   = 0;
+        virtual StateResult onUpdate(StateContext& context) = 0;
+};
+
+class FlightState : public FlightStateBase {
+
+    public:
+        virtual ~FlightState() = default;
+        StateID     getStateID() const override;
+
+    protected:
+        StateError  onInit(StateContext& context) override;
+        StateResult onUpdate(StateContext& context) override;
+};
+
+class AutoFlightState : public FlightStateBase {
+
+    public:
+        virtual ~AutoFlightState() = default;
+        StateID     getStateID() const override;
+
+    protected:
+        StateError  onInit(StateContext& context) override;
+        StateResult onUpdate(StateContext& context) override;
+};
+
+
+// --- PostFlight ---
+
+class DisArmState : public StateInterface {
+
+    public:
+        virtual ~DisArmState() = default;
+        StateError  init(StateContext& context) override;
+        StateResult update(StateContext& context) override;
+        StateID     getStateID() const override;
+};
+
+
+// --- Error ---
+
+class ErrorState : public StateInterface {
+
+    public:
+        virtual ~ErrorState() = default;
+        StateError  init(StateContext& context) override;
+        StateResult update(StateContext& context) override;
+        StateID     getStateID() const override;
+};
+
+// EMERGENCY_STOP: StateManager フォールバック専用
 class EmergencyStopState : public StateInterface {
 
     public:

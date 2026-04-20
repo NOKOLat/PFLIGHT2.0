@@ -5,12 +5,17 @@
 
 enum class StateID : uint8_t {
 
-    IDLE             = 0,
-    STATE_A          = 1,   
-    STATE_B          = 2,   
-    HARDWARE_ERROR   = 20, 
-    EMERGENCY_STOP   = 30,  
-    INVALID_STATE    = 255
+    INIT            = 0,
+    CALIBRATION     = 1,
+    PRE_ARM         = 2,
+    ARM             = 3,
+    PRE_FLIGHT      = 4,
+    FLIGHT          = 5,
+    AUTO_FLIGHT     = 6,
+    DIS_ARM         = 7,
+    ERROR           = 20,
+    EMERGENCY_STOP  = 30,   // StateManager フォールバック専用
+    INVALID_STATE   = 255
 };
 
 // 状態遷移のエラーコード
@@ -57,10 +62,15 @@ inline const char* StateIDToString(StateID state_id) {
 
     switch (state_id) {
 
-        case StateID::IDLE:           return "IDLE";
-        case StateID::STATE_A:        return "STATE_A";
-        case StateID::STATE_B:        return "STATE_B";
-        case StateID::HARDWARE_ERROR: return "HARDWARE_ERROR";
+        case StateID::INIT:           return "INIT";
+        case StateID::CALIBRATION:    return "CALIBRATION";
+        case StateID::PRE_ARM:        return "PRE_ARM";
+        case StateID::ARM:            return "ARM";
+        case StateID::PRE_FLIGHT:     return "PRE_FLIGHT";
+        case StateID::FLIGHT:         return "FLIGHT";
+        case StateID::AUTO_FLIGHT:    return "AUTO_FLIGHT";
+        case StateID::DIS_ARM:        return "DIS_ARM";
+        case StateID::ERROR:          return "ERROR";
         case StateID::EMERGENCY_STOP: return "EMERGENCY_STOP";
         case StateID::INVALID_STATE:  return "INVALID_STATE";
         default:                      return "UNKNOWN_STATE";
