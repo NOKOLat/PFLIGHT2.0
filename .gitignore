@@ -31,3 +31,6 @@ Thumbs.db
 Core/Lib/SBUS
 Core/Lib/ICM42688P
 Core/Lib/SBUS
+
+# localflies
+.local/
