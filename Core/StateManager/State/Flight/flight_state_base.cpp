@@ -1,7 +1,12 @@
 #include "../state_headers.hpp"
+#include <cmath>
 
 
 StateError FlightStateBase::init(StateContext& context) {
+
+    // EKF 遅延初期化
+    context.ekf.emplace();
+    AttitudeEKF_Init(&context.ekf.value(), SS_DT);
 
     return onInit(context);
 }
@@ -9,8 +14,26 @@ StateError FlightStateBase::init(StateContext& context) {
 
 StateError FlightStateBase::update(StateContext& context) {
 
-    // センサーデータを取得
-    context.imu->GetData(context.accel_data.data(), context.gyro_data.data()); 
+    // センサーデータを取得（加速度: m/s², ジャイロ: dps）
+    context.imu->GetData(context.accel_data.data(), context.gyro_data.data());
+
+    // ジャイロを dps → rad/s に変換
+    constexpr float DEG_TO_RAD = static_cast<float>(M_PI) / 180.0f;
+    float gyro_rad[3] = {
+        context.gyro_data[0] * DEG_TO_RAD,
+        context.gyro_data[1] * DEG_TO_RAD,
+        context.gyro_data[2] * DEG_TO_RAD,
+    };
+
+    // EKF 更新（加速度は内部で正規化される）
+    AttitudeEKF_Update(&context.ekf.value(), context.accel_data.data(), gyro_rad);
+
+    // 推定角度を context に格納（単位: rad）
+    context.angle.roll  = AttitudeEKF_GetRoll(&context.ekf.value());
+    context.angle.pitch = AttitudeEKF_GetPitch(&context.ekf.value());
+    context.angle.yaw   = AttitudeEKF_GetYaw(&context.ekf.value());
+
+    return onUpdate(context);
 }
 
 
