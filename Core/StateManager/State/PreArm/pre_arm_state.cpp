@@ -15,6 +15,12 @@ StateError PreArmState::update(StateContext& context) {
 
 StateResult PreArmState::evaluateNextState(StateContext& context) {
 
+    // Armスイッチが有効になったらArmStateへ遷移
+    if(context.sbus_data.arm == SwitchPosition::HIGH){
+
+        return {StateChange::STATE_CHANGE, StateID::ARM};
+    }
+
     return {StateChange::NO_STATE_CHANGE, StateID::PRE_ARM};
 }
 
