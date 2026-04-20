@@ -9,6 +9,9 @@ StateError CalibrationState::init(StateContext& context) {
 
 StateError CalibrationState::update(StateContext& context) {
 
+    // icm42688pのキャリブレーション
+    context.imu->Calibration(1000);
+
     return StateError::NONE;
 }
 

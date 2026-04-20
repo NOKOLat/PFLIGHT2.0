@@ -5,6 +5,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <array>
 #include "stm32f7xx_hal.h"
 #include "SBUS/sbus.h"
 #include "sbus_rescaler.hpp"
@@ -25,6 +26,9 @@ struct StateContext {
 
     // ICM42688P（遅延初期化: InitStateでemplace）
     std::optional<ICM42688P> imu = std::nullopt;
+    std::array<float, 3> accel_data = {};
+    std::array<float, 3> gyro_data = {};
+    
 };
 
 
