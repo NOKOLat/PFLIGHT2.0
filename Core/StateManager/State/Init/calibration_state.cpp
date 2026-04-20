@@ -17,7 +17,7 @@ StateResult CalibrationState::evaluateNextState(StateContext& context) {
 
 
 
-    return {StateChange::NO_STATE_CHANGE, StateID::PRE_ARM};
+    return {StateChange::STATE_CHANGE, StateID::PRE_ARM};
 }
 
 
