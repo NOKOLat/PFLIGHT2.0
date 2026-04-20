@@ -16,7 +16,7 @@ StateError DisArmState::update(StateContext& context) {
 StateResult DisArmState::evaluateNextState(StateContext& context) {
 
     // 処理が完了したらPreArmStateへ遷移
-    return {StateChange::NO_STATE_CHANGE, StateID::PRE_ARM};
+    return {StateChange::STATE_CHANGE, StateID::PRE_ARM};
 }
 
 

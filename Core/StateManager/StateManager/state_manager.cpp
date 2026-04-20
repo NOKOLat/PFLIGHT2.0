@@ -31,8 +31,10 @@ bool StateManager::init() {
     }
 
     // ISRManager に SBUS を登録し、DMA受信を開始する
-    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.sbus_uart);
-    //    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.debug_sbus_uart);
+   // ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.sbus_uart);
+
+    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.debug_sbus_uart);
+    state_context_.publish_log("[StateManager] SBUS Ready");
 
 
     // 初期状態への遷移
@@ -42,6 +44,15 @@ bool StateManager::init() {
 // 更新処理（メインループから毎フレーム呼ばれる）
 // EMERGENCY_STOP で停止処理が完了した場合のみ SHUTDOWN を返す
 UpdateResult StateManager::update() {
+
+    // SBUS受信値を最新化する
+    // 受信済みの生データを StateContext の制御用データへ反映する
+    const nokolat::SBUS_DATA& sbus_data = state_context_.sbus_receiver.getData();
+
+    state_context_.sbus_data = nokolat::SBUSRescaler::rescale(sbus_data.data);
+    state_context_.sbus_data.failsafe = sbus_data.failsafe;
+    state_context_.sbus_data.framelost = sbus_data.framelost;
+    state_context_.sbus_data.raw_data = sbus_data.data;
 
     // エラー時のフォールバック処理
     // EMERGENCY_STOP の停止処理を実行し、完了したら SHUTDOWN を返す
@@ -119,7 +130,7 @@ StateChangeResult StateManager::changeState(StateID state_id) {
 
     // 遷移成功：current_state_ をセット
     current_state_ = std::move(new_state);
-    state_context_.publish_log("[StateManager] -> " + std::string(StateIDToString(state_id)));
+    state_context_.publish_log("[StateManager] Next state: " + std::string(StateIDToString(state_id)));
 
     return StateChangeResult::SUCCESS;
 }

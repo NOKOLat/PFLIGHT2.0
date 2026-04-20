@@ -9,6 +9,7 @@ StateError PreArmState::init(StateContext& context) {
 
 StateError PreArmState::update(StateContext& context) {
 
+	printf("throttle: %f\n", context.sbus_data.throttle);
     return StateError::NONE;
 }
 

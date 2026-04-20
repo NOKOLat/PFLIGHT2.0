@@ -7,6 +7,7 @@ StateManager state_manager(StateID::INIT);
 
 void init(){
 
+	printf("Build: 1\n");
     state_manager.init();
 }
 
