@@ -17,6 +17,7 @@ struct StateContext {
     // SBUS
     nokolat::SBUS            sbus_receiver;
     UART_HandleTypeDef*      sbus_uart  = &huart5;
+    UART_HandleTypeDef*      debug_sbus_uart  = &huart2; // デバッグ用（必要に応じて変更）
     nokolat::RescaledSBUSData sbus_data = {};
 };
 
