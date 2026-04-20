@@ -15,7 +15,9 @@ StateError CalibrationState::update(StateContext& context) {
 
 StateResult CalibrationState::evaluateNextState(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::CALIBRATION};
+
+
+    return {StateChange::STATE_CHANGE, StateID::PRE_ARM};
 }
 
 

@@ -9,11 +9,18 @@ StateError PreFlightState::init(StateContext& context) {
 
 StateError PreFlightState::update(StateContext& context) {
 
+	printf("throttle: %f\n", context.sbus_data.throttle);
     return StateError::NONE;
 }
 
 
 StateResult PreFlightState::evaluateNextState(StateContext& context) {
+
+    // Safetyスイッチが有効になったらFlightStateへ遷移
+    if(context.sbus_data.safety == SwitchPosition::HIGH){
+
+        return {StateChange::STATE_CHANGE, StateID::FLIGHT};
+    }
 
     return {StateChange::NO_STATE_CHANGE, StateID::PRE_FLIGHT};
 }
