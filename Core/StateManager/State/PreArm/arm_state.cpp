@@ -15,7 +15,7 @@ StateError ArmState::update(StateContext& context) {
 
 StateResult ArmState::evaluateNextState(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::ARM};
+    return {StateChange::STATE_CHANGE, StateID::PRE_FLIGHT};
 }
 
 

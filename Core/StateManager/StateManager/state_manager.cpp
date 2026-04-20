@@ -130,7 +130,7 @@ StateChangeResult StateManager::changeState(StateID state_id) {
 
     // 遷移成功：current_state_ をセット
     current_state_ = std::move(new_state);
-    state_context_.publish_log("[StateManager] -> " + std::string(StateIDToString(state_id)));
+    state_context_.publish_log("[StateManager] Next state: " + std::string(StateIDToString(state_id)));
 
     return StateChangeResult::SUCCESS;
 }
