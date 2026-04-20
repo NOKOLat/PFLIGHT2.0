@@ -4,10 +4,6 @@
 
 StateError FlightStateBase::init(StateContext& context) {
 
-    // EKF 遅延初期化
-    context.ekf.emplace();
-    AttitudeEKF_Init(&context.ekf.value(), SS_DT);
-
     return onInit(context);
 }
 

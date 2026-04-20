@@ -45,7 +45,9 @@ StateError InitState::init(StateContext& context) {
 	context.imu->AccelConfig(context.imu->ACCEL_Mode::LowNoize, context.imu->ACCEL_SCALE::SCALE02g, context.imu->ACCEL_ODR::ODR01000hz, context.imu->ACCEL_DLPF::ODR40);
 	context.imu->GyroConfig(context.imu->GYRO_MODE::LowNoize, context.imu->GYRO_SCALE::Dps0250, context.imu->GYRO_ODR::ODR01000hz, context.imu->GYRO_DLPF::ODR40);
 
-
+    // EKF 遅延初期化
+    context.ekf.emplace();
+    AttitudeEKF_Init(&context.ekf.value(), SS_DT);
 
     return StateError::NONE;
 }
