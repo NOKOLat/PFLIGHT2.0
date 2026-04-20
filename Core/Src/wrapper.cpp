@@ -1,5 +1,6 @@
 #include "wrapper.hpp"
 #include "StateManager/state_manager.hpp"
+#include "isr_manager.hpp"
 #include "usart.h"
 
 StateManager state_manager(StateID::INIT);

@@ -20,15 +20,13 @@ namespace nokolat {
 struct RescaledSBUSData {
 
     // アナログチャネル
-    float throttle;      // スロットル [0~100] %
-    float aileron;       // エルロン (ロール) [-100~100] %
-    float elevator;      // エレベーター (ピッチ) [-100~100] %
-    float rudder;        // ラダー (ヨー) [-100~100] %
-    float right_aileron;   // 右エルロン [-100~100] %
+    float throttle;  // スロットル [0~100] %
+    float pitch;     // ピッチ [-100~100] %
+    float roll;      // ロール [-100~100] %
+    float yaw;       // ヨー [-100~100] %
 
     // AUXチャネル
-    SwitchPosition autofly;         // 自動操縦フラグ [LOW / MID / HIGH]
-    SwitchPosition selectmission;   // ミッション選択 [LOW / MID / HIGH]
+    SwitchPosition arm;             // Arm [LOW / MID / HIGH]
     SwitchPosition auto_mission;    // 自動離着陸用 [LOW / MID / HIGH]
     SwitchPosition safety;          // 安全装置 [LOW:解除 / MID以上:有効]
     SwitchPosition drop;            // 投下装置トリガー [LOW / MID / HIGH]
@@ -48,15 +46,13 @@ struct RescaledSBUSData {
 enum class SBUSChannel : uint8_t {
 
     THROTTLE        = SbusConfig::CH_THROTTLE,
-    AILERON         = SbusConfig::CH_AILERON,
-    RUDDER          = SbusConfig::CH_RUDDER,
-    ELEVATOR        = SbusConfig::CH_ELEVATOR,
+    PITCH           = SbusConfig::CH_PITCH,
+    ROLL            = SbusConfig::CH_ROLL,
+    YAW             = SbusConfig::CH_YAW,
     DROP            = SbusConfig::CH_DROP,
-    RIGHT_AILERON   = SbusConfig::CH_RIGHT_AILERON,
-    AUTOFLY         = SbusConfig::CH_AUTOFLY,
-    SELECT_MISSION  = SbusConfig::CH_SELECT_MISSION,
-    AUTO_MISSION    = SbusConfig::CH_AUTO_MISSION,
+    ARM             = SbusConfig::CH_ARM,
     SAFETY          = SbusConfig::CH_SAFETY,
+    AUTO_MISSION    = SbusConfig::CH_AUTO_MISSION,
     PREFLIGHT_DEBUG = SbusConfig::CH_PREFLIGHT_DEBUG,
     FLIGHT_DEBUG    = SbusConfig::CH_FLIGHT_DEBUG
 };
@@ -85,10 +81,9 @@ public:
         uint16_t throttle_max = SbusConfig::THROTTLE_MAX;
 
         // 各軸のキャリブレーション: -100~100の範囲にマッピング
-        AxisCalib left_aileron  = {SbusConfig::AILERON_MIN,       SbusConfig::AILERON_MID,       SbusConfig::AILERON_MAX};
-        AxisCalib elevator      = {SbusConfig::ELEVATOR_MIN,      SbusConfig::ELEVATOR_MID,      SbusConfig::ELEVATOR_MAX};
-        AxisCalib rudder        = {SbusConfig::RUDDER_MIN,        SbusConfig::RUDDER_MID,        SbusConfig::RUDDER_MAX};
-        AxisCalib right_aileron = {SbusConfig::RIGHT_AILERON_MIN, SbusConfig::RIGHT_AILERON_MID, SbusConfig::RIGHT_AILERON_MAX};
+        AxisCalib pitch = {SbusConfig::PITCH_MIN, SbusConfig::PITCH_MID, SbusConfig::PITCH_MAX};
+        AxisCalib roll  = {SbusConfig::ROLL_MIN,  SbusConfig::ROLL_MID,  SbusConfig::ROLL_MAX};
+        AxisCalib yaw   = {SbusConfig::YAW_MIN,   SbusConfig::YAW_MID,   SbusConfig::YAW_MAX};
 
         // 3段階スイッチの閾値 (0~750: LOW / 751~1500: MID / 1501~2047: HIGH)
         uint16_t switch_low_threshold  = SbusConfig::SWITCH_LOW_THRESHOLD;   // LOW/MID境界

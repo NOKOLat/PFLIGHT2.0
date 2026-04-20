@@ -170,18 +170,12 @@ RescaledSBUSData SBUSRescaler::rescale(const std::array<uint16_t, 18>& sbus_data
 
     // アナログチャネルのリスケーリング（各軸ごとのキャリブレーション値を使用）
     result.throttle = getThrottle(sbus_data, SBUSChannel::THROTTLE, thresholds);
-    result.aileron  = getControl(sbus_data, SBUSChannel::AILERON,  thresholds.left_aileron);
-    result.elevator = getControl(sbus_data, SBUSChannel::ELEVATOR, thresholds.elevator);
-    result.rudder   = getControl(sbus_data, SBUSChannel::RUDDER,   thresholds.rudder);
-
-    // AUXチャネルのリスケーリング
-
-    // 右エルロン: -100~100 （deg変換は呼び出し側で SBUS_TO_SERVO_DEG を乗算）
-    result.right_aileron = getControl(sbus_data, SBUSChannel::RIGHT_AILERON, thresholds.right_aileron);
+    result.pitch    = getControl(sbus_data, SBUSChannel::PITCH, thresholds.pitch);
+    result.roll     = getControl(sbus_data, SBUSChannel::ROLL,  thresholds.roll);
+    result.yaw      = getControl(sbus_data, SBUSChannel::YAW,   thresholds.yaw);
 
     // AUXスイッチチャネル: SwitchPosition (LOW / MID / HIGH) に変換
-    result.autofly         = getSwitch(sbus_data, SBUSChannel::AUTOFLY,         thresholds);
-    result.selectmission   = getSwitch(sbus_data, SBUSChannel::SELECT_MISSION,  thresholds);
+    result.arm             = getSwitch(sbus_data, SBUSChannel::ARM,             thresholds);
     result.auto_mission    = getSwitch(sbus_data, SBUSChannel::AUTO_MISSION,    thresholds);
     result.safety          = getSwitch(sbus_data, SBUSChannel::SAFETY,          thresholds);
     result.drop            = getSwitch(sbus_data, SBUSChannel::DROP,            thresholds);
