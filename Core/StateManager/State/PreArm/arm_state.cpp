@@ -7,9 +7,15 @@ StateError ArmState::init(StateContext& context) {
 }
 
 
-StateResult ArmState::update(StateContext& context) {
+StateError ArmState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::ARM, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult ArmState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::ARM};
 }
 
 

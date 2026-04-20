@@ -7,9 +7,15 @@ StateError DisArmState::init(StateContext& context) {
 }
 
 
-StateResult DisArmState::update(StateContext& context) {
+StateError DisArmState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::DIS_ARM, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult DisArmState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::DIS_ARM};
 }
 
 

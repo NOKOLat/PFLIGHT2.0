@@ -12,13 +12,17 @@ class StateInterface {
 
         // [in] context : 状態間共有データ
         // [return] NONE（成功）or UPDATE_FAILED_CRITICAL（致命的）
-        virtual StateError  init(StateContext& context)   = 0;
+        virtual StateError  init(StateContext& context)              = 0;
 
         // [in] context : 状態間共有データ
-        // [return] StateResult（遷移フラグ、次状態、エラーレベル）
-        virtual StateResult update(StateContext& context) = 0;
+        // [return] NONE（成功）or UPDATE_FAILED_CRITICAL（致命的）
+        virtual StateError  update(StateContext& context)            = 0;
 
-        virtual StateID     getStateID() const            = 0;
+        // [in] context : 状態間共有データ
+        // [return] StateResult（遷移フラグ、次状態）
+        virtual StateResult evaluateNextState(StateContext& context) = 0;
+
+        virtual StateID     getStateID() const                       = 0;
 
     protected:
 

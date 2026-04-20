@@ -7,9 +7,15 @@ StateError PreFlightState::init(StateContext& context) {
 }
 
 
-StateResult PreFlightState::update(StateContext& context) {
+StateError PreFlightState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::PRE_FLIGHT, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult PreFlightState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::PRE_FLIGHT};
 }
 
 

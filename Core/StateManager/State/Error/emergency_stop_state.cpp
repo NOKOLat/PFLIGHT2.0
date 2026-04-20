@@ -5,9 +5,15 @@ StateError EmergencyStopState::init(StateContext& context) {
     return StateError::NONE;
 }
 
-StateResult EmergencyStopState::update(StateContext& context) {
+StateError EmergencyStopState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::EMERGENCY_STOP, StateError::CRITICAL_STOPPED};
+    return StateError::CRITICAL_STOPPED;
+}
+
+
+StateResult EmergencyStopState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::EMERGENCY_STOP};
 }
 
 

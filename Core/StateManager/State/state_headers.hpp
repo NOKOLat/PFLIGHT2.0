@@ -13,7 +13,8 @@ class InitState : public StateInterface {
     public:
         virtual ~InitState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -22,7 +23,8 @@ class CalibrationState : public StateInterface {
     public:
         virtual ~CalibrationState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -34,7 +36,8 @@ class PreArmState : public StateInterface {
     public:
         virtual ~PreArmState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -43,7 +46,8 @@ class ArmState : public StateInterface {
     public:
         virtual ~ArmState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -52,7 +56,8 @@ class PreFlightState : public StateInterface {
     public:
         virtual ~PreFlightState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -64,11 +69,13 @@ class FlightStateBase : public StateInterface {
     public:
         virtual ~FlightStateBase() = default;
         StateError  init(StateContext& context) final;
-        StateResult update(StateContext& context) final;
+        StateError  update(StateContext& context) final;
+        StateResult evaluateNextState(StateContext& context) final;
 
     protected:
-        virtual StateError  onInit(StateContext& context)   = 0;
-        virtual StateResult onUpdate(StateContext& context) = 0;
+        virtual StateError  onInit(StateContext& context)              = 0;
+        virtual StateError  onUpdate(StateContext& context)            = 0;
+        virtual StateResult onEvaluateNextState(StateContext& context) = 0;
 };
 
 class FlightState : public FlightStateBase {
@@ -79,7 +86,8 @@ class FlightState : public FlightStateBase {
 
     protected:
         StateError  onInit(StateContext& context) override;
-        StateResult onUpdate(StateContext& context) override;
+        StateError  onUpdate(StateContext& context) override;
+        StateResult onEvaluateNextState(StateContext& context) override;
 };
 
 class AutoFlightState : public FlightStateBase {
@@ -90,7 +98,8 @@ class AutoFlightState : public FlightStateBase {
 
     protected:
         StateError  onInit(StateContext& context) override;
-        StateResult onUpdate(StateContext& context) override;
+        StateError  onUpdate(StateContext& context) override;
+        StateResult onEvaluateNextState(StateContext& context) override;
 };
 
 
@@ -101,7 +110,8 @@ class DisArmState : public StateInterface {
     public:
         virtual ~DisArmState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -113,7 +123,8 @@ class ErrorState : public StateInterface {
     public:
         virtual ~ErrorState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 
@@ -123,7 +134,8 @@ class EmergencyStopState : public StateInterface {
     public:
         virtual ~EmergencyStopState() = default;
         StateError  init(StateContext& context) override;
-        StateResult update(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
 };
 

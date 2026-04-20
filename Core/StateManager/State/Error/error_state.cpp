@@ -7,9 +7,15 @@ StateError ErrorState::init(StateContext& context) {
 }
 
 
-StateResult ErrorState::update(StateContext& context) {
+StateError ErrorState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::ERROR, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult ErrorState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::ERROR};
 }
 
 

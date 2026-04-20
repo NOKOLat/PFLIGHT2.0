@@ -4,7 +4,7 @@
 
 
 StateManager::StateManager(StateID init_state_id): init_state_id_(init_state_id) {
-    
+
     // ログ関数の定義
     state_context_.publish_log = [](const std::string& msg) {
 
@@ -42,10 +42,10 @@ UpdateResult StateManager::update() {
     if(use_fallback_) {
 
         // フォールバック中は fallback_emergency_stop_ が持っている EMERGENCY_STOP 状態を使用する
-        StateResult fallback_result = fallback_emergency_stop_->update(state_context_);
+        StateError fallback_error = fallback_emergency_stop_->update(state_context_);
 
         // EMERGENCY_STOP の停止処理が完了 → シャットダウン
-        if (fallback_result.error == StateError::CRITICAL_STOPPED) {
+        if (fallback_error == StateError::CRITICAL_STOPPED) {
 
             state_context_.publish_log("[StateManager] Emergency stop completed. Shutting down.");
             return UpdateResult::SHUTDOWN;
@@ -56,9 +56,9 @@ UpdateResult StateManager::update() {
     }
 
     // current_state_ の update() を呼ぶ
-    StateResult result = current_state_->update(state_context_);
+    StateError update_error = current_state_->update(state_context_);
 
-    if(result.error == StateError::UPDATE_FAILED_CRITICAL) {
+    if(update_error == StateError::UPDATE_FAILED_CRITICAL) {
 
         // フォールバックフラグを立てる
         state_context_.publish_log("[StateManager] CRITICAL: State update failed (ID: " + std::string(StateIDToString(current_state_->getStateID())) + ")");
@@ -67,6 +67,9 @@ UpdateResult StateManager::update() {
 
         return UpdateResult::CONTINUE;
     }
+
+    // 遷移判定
+    StateResult result = current_state_->evaluateNextState(state_context_);
 
     // 状態遷移発生時の処理
     if (result.change == StateChange::STATE_CHANGE) {
@@ -125,7 +128,7 @@ StateContext& StateManager::getContext() {
 StateID StateManager::getCurrentStateID() const {
 
     if (!current_state_) {
-        
+
         return StateID::INVALID_STATE;
     }
 

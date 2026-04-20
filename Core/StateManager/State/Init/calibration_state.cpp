@@ -7,9 +7,15 @@ StateError CalibrationState::init(StateContext& context) {
 }
 
 
-StateResult CalibrationState::update(StateContext& context) {
+StateError CalibrationState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::CALIBRATION, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult CalibrationState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::CALIBRATION};
 }
 
 

@@ -7,9 +7,15 @@ StateError FlightState::onInit(StateContext& context) {
 }
 
 
-StateResult FlightState::onUpdate(StateContext& context) {
+StateError FlightState::onUpdate(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::FLIGHT, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult FlightState::onEvaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::FLIGHT};
 }
 
 

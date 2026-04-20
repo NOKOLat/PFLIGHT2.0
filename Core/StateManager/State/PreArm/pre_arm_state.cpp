@@ -7,9 +7,15 @@ StateError PreArmState::init(StateContext& context) {
 }
 
 
-StateResult PreArmState::update(StateContext& context) {
+StateError PreArmState::update(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::PRE_ARM, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult PreArmState::evaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::PRE_ARM};
 }
 
 

@@ -48,12 +48,11 @@ enum class UpdateResult : uint8_t {
     SHUTDOWN = 1,
 };
 
-// update() の戻り値（遷移情報）
+// evaluateNextState() の戻り値（遷移情報）
 struct StateResult{
 
     StateChange change;
     StateID     next_state;
-    StateError  error = StateError::NONE;
 };
 
 

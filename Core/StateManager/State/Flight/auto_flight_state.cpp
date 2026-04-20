@@ -7,9 +7,15 @@ StateError AutoFlightState::onInit(StateContext& context) {
 }
 
 
-StateResult AutoFlightState::onUpdate(StateContext& context) {
+StateError AutoFlightState::onUpdate(StateContext& context) {
 
-    return {StateChange::NO_STATE_CHANGE, StateID::AUTO_FLIGHT, StateError::NONE};
+    return StateError::NONE;
+}
+
+
+StateResult AutoFlightState::onEvaluateNextState(StateContext& context) {
+
+    return {StateChange::NO_STATE_CHANGE, StateID::AUTO_FLIGHT};
 }
 
 
