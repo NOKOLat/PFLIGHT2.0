@@ -9,7 +9,6 @@ StateError PreFlightState::init(StateContext& context) {
 
 StateError PreFlightState::update(StateContext& context) {
 
-	printf("throttle: %f\n", context.sbus_data.throttle);
     return StateError::NONE;
 }
 

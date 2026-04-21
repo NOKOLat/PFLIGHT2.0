@@ -12,6 +12,13 @@
 #include "usart.h"
 #include "gpio.h"
 #include "ICM42688P/ICM42688P.h"
+#include "IMU_EKF/attitude_ekf.h"
+
+struct AngleData {
+    float roll  = 0.0f;  // rad
+    float pitch = 0.0f;  // rad
+    float yaw   = 0.0f;  // rad
+};
 
 struct StateContext {
 
@@ -28,7 +35,10 @@ struct StateContext {
     std::optional<ICM42688P> imu = std::nullopt;
     std::array<float, 3> accel_data = {};
     std::array<float, 3> gyro_data = {};
-    
+
+    // EKF（遅延初期化: FlightStateBase::initでemplace）
+    std::optional<AttitudeEKF_t> ekf = std::nullopt;
+    AngleData angle = {};
 };
 
 
