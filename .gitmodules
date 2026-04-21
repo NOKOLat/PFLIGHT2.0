@@ -8,3 +8,6 @@
 [submodule "Core/Lib/IMU_EKF"]
 	path = Core/Lib/IMU_EKF
 	url = https://github.com/NOKOLat/IMU_EKF.git
+[submodule "lib/STM32_Motor-Servo_Driver"]
+	path = lib/STM32_Motor-Servo_Driver
+	url = https://github.com/NOKOLat/STM32_Motor-Servo_Driver
