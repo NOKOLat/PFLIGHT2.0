@@ -6,10 +6,10 @@
 namespace SbusConfig {
 
 	// ===== SBUSチャンネル =====
-	static constexpr uint8_t CH_THROTTLE        = 3;
+	static constexpr uint8_t CH_THROTTLE        = 2;
 	static constexpr uint8_t CH_PITCH           = 0;
 	static constexpr uint8_t CH_ROLL            = 1;
-	static constexpr uint8_t CH_YAW             = 2;
+	static constexpr uint8_t CH_YAW             = 3;
 	static constexpr uint8_t CH_DROP            = 4;
 	static constexpr uint8_t CH_ARM             = 5;
 	static constexpr uint8_t CH_SAFETY          = 6;
