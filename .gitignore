@@ -28,7 +28,6 @@ Thumbs.db
 
 # Logs
 *.log
-Core/Lib/ICM42688P
 
 # localflies
 .local/

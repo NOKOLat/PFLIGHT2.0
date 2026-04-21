@@ -9,7 +9,8 @@ StateError FlightStateBase::init(StateContext& context) {
 
 StateError FlightStateBase::update(StateContext& context) {
 
-    return onUpdate(context);
+    // センサーデータを取得
+    context.imu->GetData(context.accel_data.data(), context.gyro_data.data()); 
 }
 
 
