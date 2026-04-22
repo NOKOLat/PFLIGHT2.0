@@ -47,12 +47,7 @@ StateError FlightStateBase::update(StateContext& context) {
     }
 
     // ミキシング計算・PWM出力
-    context.pwm_manager->mix(
-        context.throttle,
-        context.pid_output[0],
-        context.pid_output[1],
-        context.pid_output[2]
-    );
+    context.pwm_manager->mix(context.throttle, context.pid_output[0], context.pid_output[1], context.pid_output[2]);
     context.pwm_manager->output();
 
     return StateError::NONE;

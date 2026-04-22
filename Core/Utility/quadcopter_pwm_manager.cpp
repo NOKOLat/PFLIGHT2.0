@@ -1,5 +1,5 @@
 #include "quadcopter_pwm_manager.hpp"
-#include "quadcopter_config.hpp"
+#include "../Config/quadcopter_config.hpp"
 #include <algorithm>
 #include <cstdio>
 
