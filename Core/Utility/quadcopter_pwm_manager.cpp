@@ -32,6 +32,9 @@ bool QuadcopterPwmManager::init() {
 
 void QuadcopterPwmManager::mix(float throttle, float pid_pitch, float pid_roll, float pid_yaw) {
 
+    // throttleは(0 ~ 75%)の範囲にクランプ（制御の余地を残すため）
+    throttle = std::clamp(throttle, 0.0f, 75.0f);
+
     // クワッドコプター ミキシング計算
     motor_output_[0] = throttle + pid_pitch + pid_roll + pid_yaw;
     motor_output_[1] = throttle + pid_pitch - pid_roll - pid_yaw;
