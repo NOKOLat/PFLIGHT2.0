@@ -5,8 +5,8 @@
 #include <optional>
 #include <initializer_list>
 #include <cstdint>
-#include "Motor_Servo_Driver/motor_controller.hpp"
-#include "Motor_Servo_Driver/servo_controller.hpp"
+#include "STM32_Motor-Servo_Driver/motor_controller.hpp"
+#include "STM32_Motor-Servo_Driver/servo_controller.hpp"
 
 /* ===========================================================
  * PWM出力を管理する基底クラス

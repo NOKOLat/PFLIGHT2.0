@@ -16,6 +16,9 @@ class InitState : public StateInterface {
         StateError  update(StateContext& context) override;
         StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
+
+    private:
+        bool initialized_ = false;
 };
 
 class CalibrationState : public StateInterface {

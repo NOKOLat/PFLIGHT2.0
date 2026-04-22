@@ -48,10 +48,8 @@ float CascadePIDManager::calcPitch(float target_angle, float measured_angle,
     angle_pitch_pid_.calc(target_angle, measured_angle);
     float target_pitch_rate = angle_pitch_pid_.getData();
 
-    // Inner loop: rate error -> servo output (runs every 2 cycles)
-    if (cycle_counter_ == 0) {
-        rate_pitch_pid_.calc(target_pitch_rate, measured_rate);
-    }
+    // Inner loop: run every control cycle so dt matches the shared 10 ms loop
+    rate_pitch_pid_.calc(target_pitch_rate, measured_rate);
     return rate_pitch_pid_.getData();
 }
 
@@ -61,24 +59,15 @@ float CascadePIDManager::calcRoll(float target_angle, float measured_angle,
     angle_roll_pid_.calc(target_angle, measured_angle);
     float target_roll_rate = angle_roll_pid_.getData();
 
-    // Inner loop: rate error -> servo output (runs every 2 cycles)
-    if (cycle_counter_ == 0) {
-        rate_roll_pid_.calc(target_roll_rate, measured_rate);
-    }
+    // Inner loop: run every control cycle so dt matches the shared 10 ms loop
+    rate_roll_pid_.calc(target_roll_rate, measured_rate);
     return rate_roll_pid_.getData();
 }
 
-float CascadePIDManager::calcYaw(float target_angle, float measured_angle,
+float CascadePIDManager::calcYaw(float target_rate, float /*measured_angle*/,
                                  float measured_rate) {
-    // Outer loop: angle error -> target rate
-    angle_yaw_pid_.calc(target_angle, measured_angle);
-    float target_yaw_rate = angle_yaw_pid_.getData();
-
-    // Inner loop: rate error -> servo output (runs every 2 cycles)
-    if (cycle_counter_ == 0) {
-        rate_yaw_pid_.calc(target_yaw_rate, measured_rate);
-    }
-
+    // Rate-only control: skip angle outer loop
+    rate_yaw_pid_.calc(target_rate, measured_rate);
     return rate_yaw_pid_.getData();
 }
 
@@ -95,10 +84,6 @@ float CascadePIDManager::calcAngleRoll(float target_angle, float measured_angle)
 float CascadePIDManager::calcAngleYaw(float target_angle, float measured_angle) {
     angle_yaw_pid_.calc(target_angle, measured_angle);
     return angle_yaw_pid_.getData();
-}
-
-void CascadePIDManager::updateCycleCounter() {
-    cycle_counter_ = (cycle_counter_ + 1) % 2;
 }
 
 void CascadePIDManager::reset() {

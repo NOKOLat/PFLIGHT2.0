@@ -20,7 +20,6 @@ StateError FlightState::onUpdate(StateContext& context) {
         return StateError::UPDATE_FAILED_CRITICAL;
     }
 
-    constexpr float RAD_TO_DEG = 180.0f / 3.14159265f;
     constexpr float MAX_COMMAND_ANGLE_DEG = 30.0f;
 
     const auto& thresholds = nokolat::SBUSRescaler::default_thresholds;
@@ -33,26 +32,26 @@ StateError FlightState::onUpdate(StateContext& context) {
         context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::ROLL)],
         thresholds.roll,
         MAX_COMMAND_ANGLE_DEG);
-    const float target_yaw_deg = nokolat::SBUSRescaler::sbusToAngle(
+    const float target_yaw_rate_deg = nokolat::SBUSRescaler::sbusToAngle(
         context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::YAW)],
         thresholds.yaw,
         MAX_COMMAND_ANGLE_DEG);
 
-    const float measured_pitch_deg = context.angle.pitch * RAD_TO_DEG;
-    const float measured_roll_deg = context.angle.roll * RAD_TO_DEG;
-    const float measured_yaw_deg = context.angle.yaw * RAD_TO_DEG;
+    const float measured_pitch_deg = context.angle.pitch;
+    const float measured_roll_deg = context.angle.roll;
+    const float measured_yaw_deg = context.angle.yaw;
 
     context.cascade_pid_manager->calcCascadePIDAllAxes(
         target_pitch_deg, measured_pitch_deg,
         target_roll_deg, measured_roll_deg,
-        target_yaw_deg, measured_yaw_deg,
+        target_yaw_rate_deg, measured_yaw_deg,
         context.pid_output.data(),
         context.gyro_data[1],
         context.gyro_data[0],
         context.gyro_data[2]);
-
-    context.cascade_pid_manager->updateCycleCounter();
     context.throttle = context.sbus_data.throttle;
+
+    printf("PID: P: %.2f, R: %.2f, Y: %.2f | Throttle: %.2f\n", context.pid_output[0], context.pid_output[1], context.pid_output[2], context.throttle);
 
     return StateError::NONE;
 }

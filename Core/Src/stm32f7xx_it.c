@@ -55,6 +55,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim6;
 extern DMA_HandleTypeDef hdma_uart5_rx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 /* USER CODE BEGIN EV */
@@ -100,6 +101,14 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+	// MMFAR: フォールトを起こしたアドレス
+	// CFSR:  フォールトの種類
+	volatile uint32_t MMFAR = SCB->MMFAR;
+	volatile uint32_t CFSR  = SCB->CFSR;
+	(void)MMFAR;
+	(void)CFSR;
+	printf("MemManage! MMFAR=0x%08lX CFSR=0x%08lX\n", MMFAR, CFSR);
+	while (1) {}
 
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
@@ -225,6 +234,20 @@ void DMA1_Stream5_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream5_IRQn 1 */
 
   /* USER CODE END DMA1_Stream5_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
+  */
+void TIM6_DAC_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
+
+  /* USER CODE END TIM6_DAC_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
+
+  /* USER CODE END TIM6_DAC_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

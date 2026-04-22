@@ -1,4 +1,5 @@
 #include "../state_headers.hpp"
+#include "../../../Config/system_config.hpp"
 #include "../Config/sensor_config.hpp"
 #include "../../../Utility/PwmManager/quadcopter_pwm_manager.hpp"
 
@@ -33,31 +34,46 @@ static void icm_log(const char* msg) {
 
 StateError InitState::init(StateContext& context) {
 
-	// icm42688pの初期化
+    return StateError::NONE;
+}
+
+
+StateError InitState::update(StateContext& context) {
+
+    if (initialized_) {
+
+        printf("[InitState] Already initialized\n");
+        return StateError::NONE;
+    }
+
+    // icm42688pの初期化
     context.imu.emplace(icm_spi_write, icm_spi_read, icm_log);
-    
+
     // 通信チェック
-	if(context.imu->Connection()){
+    if (context.imu->Connection()) {
 
-		printf("ICM42688p Not Found\n");
+        printf("ICM42688p Not Found\n");
         return StateError::UPDATE_FAILED_CRITICAL;
-	}
+    }
 
-	// センサーの設定
-    if(context.imu->AccelConfig(::ICM42688P::ACCEL_Mode::LowNoize, ::ICM42688P::ACCEL_SCALE::SCALE02g, ::ICM42688P::ACCEL_ODR::ODR01000hz, ::ICM42688P::ACCEL_DLPF::ODR40) != 0){
+    // センサーの設定
+    if (context.imu->AccelConfig(::ICM42688P::ACCEL_Mode::LowNoize, ::ICM42688P::ACCEL_SCALE::SCALE02g, ::ICM42688P::ACCEL_ODR::ODR01000hz, ::ICM42688P::ACCEL_DLPF::ODR40) != 0) {
 
-		printf("ICM42688p Accel Config Failed\n");
+        printf("ICM42688p Accel Config Failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
-	}
-    if(context.imu->GyroConfig(::ICM42688P::GYRO_MODE::LowNoize, ::ICM42688P::GYRO_SCALE::Dps0250, ::ICM42688P::GYRO_ODR::ODR01000hz, ::ICM42688P::GYRO_DLPF::ODR40) != 0){
+    }
 
-		printf("ICM42688p Gyro Config Failed\n");
+    if (context.imu->GyroConfig(::ICM42688P::GYRO_MODE::LowNoize, ::ICM42688P::GYRO_SCALE::Dps0250, ::ICM42688P::GYRO_ODR::ODR01000hz, ::ICM42688P::GYRO_DLPF::ODR40) != 0) {
+
+        printf("ICM42688p Gyro Config Failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
-	}
+    }
+
+    constexpr float loop_time_s = SystemConfig::MAIN_LOOP_PERIOD_S;
 
     // EKF 遅延初期化
     context.ekf.emplace();
-    if (AttitudeEKF_Init(&context.ekf.value(), SS_DT) != 0) {
+    if (!AttitudeEKF_Init(&context.ekf.value(), loop_time_s)) {
 
         printf("EKF Init Failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
@@ -68,19 +84,14 @@ StateError InitState::init(StateContext& context) {
 
     if (!context.pwm_manager->init()) {
 
-        printf("[InitState] PwmManagerの初期化に失敗しました\n");
+        printf("[InitState] PwmManager init failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
     }
 
     // CascadePIDManager 初期化（FlightStateで使用）
-    context.cascade_pid_manager = std::make_unique<CascadePIDManager>(SS_DT);
+    context.cascade_pid_manager = std::make_unique<CascadePIDManager>(loop_time_s);
 
-    return StateError::NONE;
-}
-
-
-StateError InitState::update(StateContext& context) {
-
+    initialized_ = true;
     return StateError::NONE;
 }
 
