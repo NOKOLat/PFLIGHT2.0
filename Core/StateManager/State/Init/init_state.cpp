@@ -1,6 +1,6 @@
 #include "../state_headers.hpp"
 #include "../Config/sensor_config.hpp"
-#include "quadcopter_pwm_manager.hpp"
+#include "../../../Utility/PwmManager/quadcopter_pwm_manager.hpp"
 
 // icm42688p用のSPI書き込み関数
 static uint8_t icm_spi_write(uint8_t reg_addr, uint8_t* tx_buffer, uint8_t len) {
@@ -44,12 +44,12 @@ StateError InitState::init(StateContext& context) {
 	}
 
 	// センサーの設定
-	if(context.imu->AccelConfig(context.imu->ACCEL_Mode::LowNoize, context.imu->ACCEL_SCALE::SCALE02g, context.imu->ACCEL_ODR::ODR01000hz, context.imu->ACCEL_DLPF::ODR40) != 0){
+    if(context.imu->AccelConfig(::ICM42688P::ACCEL_Mode::LowNoize, ::ICM42688P::ACCEL_SCALE::SCALE02g, ::ICM42688P::ACCEL_ODR::ODR01000hz, ::ICM42688P::ACCEL_DLPF::ODR40) != 0){
 
 		printf("ICM42688p Accel Config Failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
 	}
-	if(context.imu->GyroConfig(context.imu->GYRO_MODE::LowNoize, context.imu->GYRO_SCALE::Dps0250, context.imu->GYRO_ODR::ODR01000hz, context.imu->GYRO_DLPF::ODR40) != 0){
+    if(context.imu->GyroConfig(::ICM42688P::GYRO_MODE::LowNoize, ::ICM42688P::GYRO_SCALE::Dps0250, ::ICM42688P::GYRO_ODR::ODR01000hz, ::ICM42688P::GYRO_DLPF::ODR40) != 0){
 
 		printf("ICM42688p Gyro Config Failed\n");
         return StateError::UPDATE_FAILED_CRITICAL;
@@ -71,6 +71,9 @@ StateError InitState::init(StateContext& context) {
         printf("[InitState] PwmManagerの初期化に失敗しました\n");
         return StateError::UPDATE_FAILED_CRITICAL;
     }
+
+    // CascadePIDManager 初期化（FlightStateで使用）
+    context.cascade_pid_manager = std::make_unique<CascadePIDManager>(SS_DT);
 
     return StateError::NONE;
 }

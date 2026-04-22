@@ -4,21 +4,31 @@
 
 StateError FlightStateBase::init(StateContext& context) {
 
+    if (context.cascade_pid_manager) {
+
+        context.cascade_pid_manager->reset();
+    }
+
+    context.pid_output.fill(0.0f);
+    context.throttle = 0.0f;
+
     return onInit(context);
 }
 
 
 StateError FlightStateBase::update(StateContext& context) {
 
+    constexpr float RAD_TO_DEG = 57.29577951308232f;
+    constexpr float DEG_TO_RAD = 0.017453292519943295f;
+
     // センサーデータを取得（加速度: m/s², ジャイロ: dps）
     context.imu->GetData(context.accel_data.data(), context.gyro_data.data());
 
-    printf("Accel: [%.2f, %.2f, %.2f] m/s², Gyro: [%.2f, %.2f, %.2f] dps\n",
+    printf("Accel: [%.2f, %.2f, %.2f] m/s^2, Gyro: [%.2f, %.2f, %.2f] dps\n",
             context.accel_data[0], context.accel_data[1], context.accel_data[2],
             context.gyro_data[0], context.gyro_data[1], context.gyro_data[2]);
 
     // ジャイロを dps → rad/s に変換
-    constexpr float DEG_TO_RAD = static_cast<float>(M_PI) / 180.0f;
     float gyro_rad[3] = {
         context.gyro_data[0] * DEG_TO_RAD,
         context.gyro_data[1] * DEG_TO_RAD,
@@ -34,9 +44,9 @@ StateError FlightStateBase::update(StateContext& context) {
     context.angle.yaw   = AttitudeEKF_GetYaw(&context.ekf.value());
 
     printf("Roll: %.2f deg, Pitch: %.2f deg, Yaw: %.2f deg\n",
-           context.angle.roll * 180.0f / static_cast<float>(M_PI),
-           context.angle.pitch * 180.0f / static_cast<float>(M_PI),
-           context.angle.yaw * 180.0f / static_cast<float>(M_PI));
+            context.angle.roll * RAD_TO_DEG,
+            context.angle.pitch * RAD_TO_DEG,
+            context.angle.yaw * RAD_TO_DEG);
 
     // 派生クラスの処理（throttle・pid_outputをcontextに書き込む）
     StateError err = onUpdate(context);
