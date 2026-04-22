@@ -134,6 +134,17 @@ float SBUSRescaler::sbusToAngle(uint16_t sbus_value,
     return pct * (max_angle_deg / 100.0f);
 }
 
+// ===== SBUS値 → 角速度 変換 =====
+// mid を 0deg/s 基準として角速度 [deg/s] に変換する
+// 変換式: rescaleControl() [-100,100] × (max_rate_deg_per_sec / 100)
+float SBUSRescaler::sbusToRate(uint16_t sbus_value,
+                                const AxisCalib& calib,
+                                float max_rate_deg_per_sec) {
+
+    float pct = rescaleControl(sbus_value, calib);  // -100 ~ +100
+    return pct * (max_rate_deg_per_sec / 100.0f);
+}
+
 // ===== サブトリム角度 計算 =====
 // calib.center が標準中心(SBUS_MID)からずれている分を角度 [deg] に変換する
 // 変換式: (center - SBUS_MID) × (180° / (max - min))

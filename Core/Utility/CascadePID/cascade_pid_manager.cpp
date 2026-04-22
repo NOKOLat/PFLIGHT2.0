@@ -30,7 +30,7 @@ CascadePIDManager::CascadePIDManager(float dt)
 void CascadePIDManager::calcCascadePIDAllAxes(
     float target_pitch, float measured_pitch,
     float target_roll, float measured_roll,
-    float target_yaw, float measured_yaw,
+    float target_yaw_rate, float measured_yaw,
     float pid_result[3],
     float measured_pitch_rate,
     float measured_roll_rate,
@@ -39,7 +39,7 @@ void CascadePIDManager::calcCascadePIDAllAxes(
     // Calculate cascade PID for all three axes
     pid_result[0] = calcPitch(target_pitch, measured_pitch, measured_pitch_rate);
     pid_result[1] = calcRoll(target_roll, measured_roll, measured_roll_rate);
-    pid_result[2] = calcYaw(target_yaw, measured_yaw, measured_yaw_rate);
+    pid_result[2] = calcYaw(target_yaw_rate, measured_yaw, measured_yaw_rate);
 }
 
 float CascadePIDManager::calcPitch(float target_angle, float measured_angle,

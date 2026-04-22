@@ -101,14 +101,6 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
-	// MMFAR: フォールトを起こしたアドレス
-	// CFSR:  フォールトの種類
-	volatile uint32_t MMFAR = SCB->MMFAR;
-	volatile uint32_t CFSR  = SCB->CFSR;
-	(void)MMFAR;
-	(void)CFSR;
-	printf("MemManage! MMFAR=0x%08lX CFSR=0x%08lX\n", MMFAR, CFSR);
-	while (1) {}
 
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)

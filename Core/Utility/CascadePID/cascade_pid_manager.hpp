@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Lib/1DoF_PID/PID.h"
-#include "cascade_pid_config.hpp"
+#include "../../Config/cascade_pid_config.hpp"
 
 class CascadePIDManager {
 public:
@@ -14,7 +14,7 @@ public:
     void calcCascadePIDAllAxes(
         float target_pitch, float measured_pitch,
         float target_roll, float measured_roll,
-        float target_yaw, float measured_yaw,
+        float target_yaw_rate, float measured_yaw,
         float pid_result[3],
         float measured_pitch_rate = 0.0f,
         float measured_roll_rate = 0.0f,
