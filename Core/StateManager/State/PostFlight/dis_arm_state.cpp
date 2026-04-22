@@ -3,6 +3,12 @@
 
 StateError DisArmState::init(StateContext& context) {
 
+    // モーターを停止する
+    if (context.pwm_manager) {
+
+        context.pwm_manager->stop();
+    }
+
     return StateError::NONE;
 }
 

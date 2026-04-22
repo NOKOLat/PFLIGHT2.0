@@ -3,6 +3,12 @@
 
 StateError ErrorState::init(StateContext& context) {
 
+    // エラー発生時: モーターを停止する
+    if (context.pwm_manager) {
+
+        context.pwm_manager->stop();
+    }
+
     return StateError::NONE;
 }
 

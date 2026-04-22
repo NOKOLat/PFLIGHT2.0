@@ -1,5 +1,6 @@
 #include "../state_headers.hpp"
 #include "../Config/sensor_config.hpp"
+#include "quadcopter_pwm_manager.hpp"
 
 // icm42688p用のSPI書き込み関数
 static uint8_t icm_spi_write(uint8_t reg_addr, uint8_t* tx_buffer, uint8_t len) {
@@ -39,15 +40,37 @@ StateError InitState::init(StateContext& context) {
 	if(context.imu->Connection()){
 
 		printf("ICM42688p Not Found\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
 	}
 
 	// センサーの設定
-	context.imu->AccelConfig(context.imu->ACCEL_Mode::LowNoize, context.imu->ACCEL_SCALE::SCALE02g, context.imu->ACCEL_ODR::ODR01000hz, context.imu->ACCEL_DLPF::ODR40);
-	context.imu->GyroConfig(context.imu->GYRO_MODE::LowNoize, context.imu->GYRO_SCALE::Dps0250, context.imu->GYRO_ODR::ODR01000hz, context.imu->GYRO_DLPF::ODR40);
+	if(context.imu->AccelConfig(context.imu->ACCEL_Mode::LowNoize, context.imu->ACCEL_SCALE::SCALE02g, context.imu->ACCEL_ODR::ODR01000hz, context.imu->ACCEL_DLPF::ODR40) != 0){
+
+		printf("ICM42688p Accel Config Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+	}
+	if(context.imu->GyroConfig(context.imu->GYRO_MODE::LowNoize, context.imu->GYRO_SCALE::Dps0250, context.imu->GYRO_ODR::ODR01000hz, context.imu->GYRO_DLPF::ODR40) != 0){
+
+		printf("ICM42688p Gyro Config Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+	}
 
     // EKF 遅延初期化
     context.ekf.emplace();
-    AttitudeEKF_Init(&context.ekf.value(), SS_DT);
+    if (AttitudeEKF_Init(&context.ekf.value(), SS_DT) != 0) {
+
+        printf("EKF Init Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    // PwmManager 初期化（4発機: QuadcopterPwmManager）
+    context.pwm_manager = std::make_unique<QuadcopterPwmManager>();
+
+    if (!context.pwm_manager->init()) {
+
+        printf("[InitState] PwmManagerの初期化に失敗しました\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
 
     return StateError::NONE;
 }

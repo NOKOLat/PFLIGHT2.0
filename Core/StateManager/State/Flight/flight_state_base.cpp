@@ -38,7 +38,24 @@ StateError FlightStateBase::update(StateContext& context) {
            context.angle.pitch * 180.0f / static_cast<float>(M_PI),
            context.angle.yaw * 180.0f / static_cast<float>(M_PI));
 
-    return onUpdate(context);
+    // 派生クラスの処理（throttle・pid_outputをcontextに書き込む）
+    StateError err = onUpdate(context);
+
+    if (err != StateError::NONE) {
+
+        return err;
+    }
+
+    // ミキシング計算・PWM出力
+    context.pwm_manager->mix(
+        context.throttle,
+        context.pid_output[0],
+        context.pid_output[1],
+        context.pid_output[2]
+    );
+    context.pwm_manager->output();
+
+    return StateError::NONE;
 }
 
 
