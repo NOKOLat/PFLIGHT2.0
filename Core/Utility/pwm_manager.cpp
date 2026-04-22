@@ -46,3 +46,53 @@ bool PwmManager::checkServos(std::initializer_list<uint8_t> indices) {
 
     return true;
 }
+
+
+void PwmManager::setMotorDirect(uint8_t idx, float speed_pct) {
+
+    if (idx < motors_.size() && motors_[idx].has_value()) {
+
+        motors_[idx]->setSpeed(speed_pct);
+    }
+}
+
+
+void PwmManager::setServoDirect(uint8_t idx, float angle_deg) {
+
+    if (idx < servos_.size() && servos_[idx].has_value()) {
+
+        servos_[idx]->setAngle(angle_deg);
+    }
+}
+
+
+uint8_t PwmManager::getMotorCount() const {
+
+    uint8_t count = 0;
+
+    for (const auto& motor : motors_) {
+
+        if (motor.has_value()) {
+
+            count++;
+        }
+    }
+
+    return count;
+}
+
+
+uint8_t PwmManager::getServoCount() const {
+
+    uint8_t count = 0;
+
+    for (const auto& servo : servos_) {
+
+        if (servo.has_value()) {
+
+            count++;
+        }
+    }
+
+    return count;
+}

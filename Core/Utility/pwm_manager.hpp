@@ -43,6 +43,22 @@ class PwmManager {
         // 全有効モーター・サーボを停止する
         virtual void stop() = 0;
 
+        // モーターを直接制御する（テスト・デバッグ用）
+        // [in] uint8_t idx      - モーターインデックス (0~7)
+        // [in] float speed_pct  - 速度 (0~100%)
+        void setMotorDirect(uint8_t idx, float speed_pct);
+
+        // サーボを直接制御する（テスト・デバッグ用）
+        // [in] uint8_t idx      - サーボインデックス (0~3)
+        // [in] float angle_deg  - 角度 (-90~90度)
+        void setServoDirect(uint8_t idx, float angle_deg);
+
+        // 有効なモーター数を返す（has_value() == true の台数）
+        uint8_t getMotorCount() const;
+
+        // 有効なサーボ数を返す（has_value() == true の台数）
+        uint8_t getServoCount() const;
+
     protected:
 
         // モーターインスタンス（最大8台、optionalで遅延初期化）
