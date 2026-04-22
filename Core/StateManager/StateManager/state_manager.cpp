@@ -36,9 +36,7 @@ bool StateManager::init() {
     ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.debug_sbus_uart);
     state_context_.publish_log("[StateManager] SBUS Ready");
 
-
-    // 初期状態への遷移
-    return changeState(init_state_id_) == StateChangeResult::SUCCESS;
+    return true;
 }
 
 // 更新処理（メインループから毎フレーム呼ばれる）
@@ -53,6 +51,19 @@ UpdateResult StateManager::update() {
     state_context_.sbus_data.failsafe = sbus_data.failsafe;
     state_context_.sbus_data.framelost = sbus_data.framelost;
     state_context_.sbus_data.raw_data = sbus_data.data;
+
+    // 初回: 初期状態のインスタンスを生成する
+    // init() ではなく update() で生成することで、失敗時にフォールバックへ流せる
+    if (!current_state_ && !use_fallback_) {
+
+        if (changeState(init_state_id_) == StateChangeResult::FAILED) {
+
+            state_context_.publish_log("[StateManager] CRITICAL: Failed to create initial state. Falling back to EMERGENCY_STOP.");
+            use_fallback_ = true;
+        }
+
+        return UpdateResult::CONTINUE;
+    }
 
     // エラー時のフォールバック処理
     // EMERGENCY_STOP の停止処理を実行し、完了したら SHUTDOWN を返す

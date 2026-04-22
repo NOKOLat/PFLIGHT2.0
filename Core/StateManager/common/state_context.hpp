@@ -14,7 +14,8 @@
 #include "gpio.h"
 #include "ICM42688P/ICM42688P.h"
 #include "IMU_EKF/attitude_ekf.h"
-#include "pwm_manager.hpp"
+#include "../../Utility/PwmManager/pwm_manager.hpp"
+#include "../../Utility/CascadePID/cascade_pid_manager.hpp"
 
 struct AngleData {
     float roll  = 0.0f;  // rad
@@ -24,7 +25,7 @@ struct AngleData {
 
 struct StateContext {
 
-    uint32_t state_change_count = 0;
+    std::uint32_t state_change_count = 0;
     std::function<void(const std::string&)> publish_log = [](const std::string&) {};
 
     // SBUS
@@ -44,6 +45,9 @@ struct StateContext {
 
     // PwmManager（遅延初期化: InitStateでmake_unique）
     std::unique_ptr<PwmManager> pwm_manager = nullptr;
+
+    // CascadePIDManager（遅延初期化: InitStateでmake_unique）
+    std::unique_ptr<CascadePIDManager> cascade_pid_manager = nullptr;
 
     // PID出力（FlightState::onUpdate()で計算）
     std::array<float, 3> pid_output = {};  // [pitch, roll, yaw]

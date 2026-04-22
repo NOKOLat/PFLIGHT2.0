@@ -16,13 +16,13 @@ StateError AutoFlightState::onUpdate(StateContext& context) {
 StateResult AutoFlightState::onEvaluateNextState(StateContext& context) {
 
     // Armスイッチが無効になったらDisArmStateへ遷移
-    if(context.sbus_data.arm == SwitchPosition::LOW){
+    if(context.sbus_data.arm != SwitchPosition::HIGH){
 
         return {StateChange::STATE_CHANGE, StateID::DIS_ARM};
     }
 
     // Auto Missionスイッチが無効になったらFlightStateへ遷移
-    if(context.sbus_data.auto_mission == SwitchPosition::LOW){
+    if(context.sbus_data.auto_mission != SwitchPosition::HIGH){
 
         return {StateChange::STATE_CHANGE, StateID::FLIGHT};
     }
