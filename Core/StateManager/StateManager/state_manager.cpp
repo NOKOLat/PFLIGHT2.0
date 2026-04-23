@@ -76,6 +76,7 @@ UpdateResult StateManager::update() {
         if (fallback_error == StateError::CRITICAL_STOPPED) {
 
             state_context_.publish_log("[StateManager] Emergency stop completed. Shutting down.");
+            while(1);
             return UpdateResult::SHUTDOWN;
         }
 
