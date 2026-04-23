@@ -1,5 +1,7 @@
 #include "../state_headers.hpp"
+#include "../../../Config/system_config.hpp"
 #include "../Config/sensor_config.hpp"
+#include "../../../Utility/PwmManager/dualcopter_pwm_manager.hpp"
 
 // icm42688p用のSPI書き込み関数
 static uint8_t icm_spi_write(uint8_t reg_addr, uint8_t* tx_buffer, uint8_t len) {
@@ -32,29 +34,64 @@ static void icm_log(const char* msg) {
 
 StateError InitState::init(StateContext& context) {
 
-	// icm42688pの初期化
-    context.imu.emplace(icm_spi_write, icm_spi_read, icm_log);
-    
-    // 通信チェック
-	if(context.imu->Connection()){
-
-		printf("ICM42688p Not Found\n");
-	}
-
-	// センサーの設定
-	context.imu->AccelConfig(context.imu->ACCEL_Mode::LowNoize, context.imu->ACCEL_SCALE::SCALE02g, context.imu->ACCEL_ODR::ODR01000hz, context.imu->ACCEL_DLPF::ODR40);
-	context.imu->GyroConfig(context.imu->GYRO_MODE::LowNoize, context.imu->GYRO_SCALE::Dps0250, context.imu->GYRO_ODR::ODR01000hz, context.imu->GYRO_DLPF::ODR40);
-
-    // EKF 遅延初期化
-    context.ekf.emplace();
-    AttitudeEKF_Init(&context.ekf.value(), SS_DT);
-
     return StateError::NONE;
 }
 
 
 StateError InitState::update(StateContext& context) {
 
+    if (initialized_) {
+
+        printf("[InitState] Already initialized\n");
+        return StateError::NONE;
+    }
+
+    // icm42688pの初期化
+    context.imu.emplace(icm_spi_write, icm_spi_read, icm_log);
+
+    // 通信チェック
+    if (context.imu->Connection()) {
+
+        printf("ICM42688p Not Found\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    // センサーの設定
+    if (context.imu->AccelConfig(::ICM42688P::ACCEL_Mode::LowNoize, ::ICM42688P::ACCEL_SCALE::SCALE02g, ::ICM42688P::ACCEL_ODR::ODR01000hz, ::ICM42688P::ACCEL_DLPF::ODR40) != 0) {
+
+        printf("ICM42688p Accel Config Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    if (context.imu->GyroConfig(::ICM42688P::GYRO_MODE::LowNoize, ::ICM42688P::GYRO_SCALE::Dps0250, ::ICM42688P::GYRO_ODR::ODR01000hz, ::ICM42688P::GYRO_DLPF::ODR40) != 0) {
+
+        printf("ICM42688p Gyro Config Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    constexpr float loop_time_s = SystemConfig::MAIN_LOOP_PERIOD_S;
+
+    // EKF 遅延初期化
+    context.ekf.emplace();
+    if (!AttitudeEKF_Init(&context.ekf.value(), loop_time_s)) {
+
+        printf("EKF Init Failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    // PwmManager 初期化
+    context.pwm_manager = std::make_unique<DualcopterPwmManager>();
+
+    if (!context.pwm_manager->init()) {
+
+        printf("[InitState] PwmManager init failed\n");
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    // CascadePIDManager 初期化（FlightStateで使用）
+    context.cascade_pid_manager = std::make_unique<CascadePIDManager>(loop_time_s);
+
+    initialized_ = true;
     return StateError::NONE;
 }
 

@@ -8,3 +8,10 @@
 [submodule "Core/Lib/IMU_EKF"]
 	path = Core/Lib/IMU_EKF
 	url = https://github.com/NOKOLat/IMU_EKF.git
+[submodule "Core/Lib/STM32_Motor-Servo_Driver"]
+	path = Core/Lib/STM32_Motor-Servo_Driver
+	url = https://github.com/NOKOLat/STM32_Motor-Servo_Driver
+[submodule "Core/Lib/1DoF_PID"]
+	path = Core/Lib/1DoF_PID
+	url = https://github.com/NOKOLat/1DoF_PID.git
+	branch = master

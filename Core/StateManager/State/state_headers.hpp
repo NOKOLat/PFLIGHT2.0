@@ -16,6 +16,9 @@ class InitState : public StateInterface {
         StateError  update(StateContext& context) override;
         StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
+
+    private:
+        bool initialized_ = false;
 };
 
 class CalibrationState : public StateInterface {
@@ -59,6 +62,25 @@ class PreFlightState : public StateInterface {
         StateError  update(StateContext& context) override;
         StateResult evaluateNextState(StateContext& context) override;
         StateID     getStateID() const override;
+};
+
+class MotorServoTestState : public StateInterface {
+
+    public:
+        virtual ~MotorServoTestState() = default;
+        StateError  init(StateContext& context) override;
+        StateError  update(StateContext& context) override;
+        StateResult evaluateNextState(StateContext& context) override;
+        StateID     getStateID() const override;
+
+    private:
+        uint16_t counter_       = 0;
+        uint8_t  current_index_ = 0;   // テスト中のサーボ/モーターインデックス
+        uint8_t  servo_count_   = 0;   // キャッシュしたサーボ数
+        uint8_t  motor_count_   = 0;   // キャッシュしたモーター数
+
+        // 400Hz × 1秒 = 400カウント
+        static constexpr uint16_t ONE_SECOND_COUNT = 400;
 };
 
 

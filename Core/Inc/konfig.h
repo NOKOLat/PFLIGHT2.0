@@ -13,6 +13,8 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include "../Config/system_config_values.h"
+
 
 /* ===== 状態空間の次元 ===== */
 #define SS_X_LEN    (3)     /* 状態: roll, pitch, yaw */
@@ -21,8 +23,8 @@
 
 /* ===== サンプリング時間 ===== */
 /* FlightStateBase::update() の呼び出し周期に合わせてください */
-#define SS_DT_MS    (10)                        /* 10 ms = 100 Hz */
-#define SS_DT       ((float)(SS_DT_MS) / 1000.0f)
+#define SS_DT_MS    (SYSTEM_MAIN_LOOP_PERIOD_MS)   /* 10 ms = 100 Hz */
+#define SS_DT       (SYSTEM_MAIN_LOOP_PERIOD_S)
 
 
 /* ===== 行列サイズ ===== */

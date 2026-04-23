@@ -145,6 +145,12 @@ public:
                               const AxisCalib& calib,
                               float max_angle_deg = 90.0f);
 
+    // ===== SBUS値 → 角速度 変換 =====
+    // mid を 0deg/s 基準として、SBUS生値を角速度 [deg/s] に変換する
+    static float sbusToRate(uint16_t sbus_value,
+                             const AxisCalib& calib,
+                             float max_rate_deg_per_sec);
+
     // ===== サブトリム角度 計算 =====
     // calib.center（プロポのサブトリム反映値）が標準中心(SBUS_MID)から
     // どれだけずれているかを角度 [deg] に変換して返す
