@@ -1,7 +1,7 @@
 #include "../state_headers.hpp"
 #include "../../../Config/system_config.hpp"
 #include "../Config/sensor_config.hpp"
-#include "../../../Utility/PwmManager/quadcopter_pwm_manager.hpp"
+#include "../../../Utility/PwmManager/dualcopter_pwm_manager.hpp"
 
 // icm42688p用のSPI書き込み関数
 static uint8_t icm_spi_write(uint8_t reg_addr, uint8_t* tx_buffer, uint8_t len) {
@@ -79,8 +79,8 @@ StateError InitState::update(StateContext& context) {
         return StateError::UPDATE_FAILED_CRITICAL;
     }
 
-    // PwmManager 初期化（4発機: QuadcopterPwmManager）
-    context.pwm_manager = std::make_unique<QuadcopterPwmManager>();
+    // PwmManager 初期化
+    context.pwm_manager = std::make_unique<DualcopterPwmManager>();
 
     if (!context.pwm_manager->init()) {
 
