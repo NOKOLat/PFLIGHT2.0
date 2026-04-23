@@ -52,10 +52,10 @@ void DualcopterPwmManager::mix(float throttle, float pid_pitch, float pid_roll, 
     motor_output_[1] = throttle;
 
     // サーボ ミキシング計算
-    servo_output_[0] = pid_pitch + pid_roll + pid_yaw;
-    servo_output_[1] = pid_pitch - pid_roll - pid_yaw;
-    servo_output_[2] = pid_pitch + pid_roll - pid_yaw;
-    servo_output_[3] = pid_pitch - pid_roll + pid_yaw;
+    servo_output_[0] = -pid_roll  + pid_yaw;
+    servo_output_[1] = -pid_pitch + pid_yaw;
+    servo_output_[2] = pid_roll   + pid_yaw;
+    servo_output_[3] = pid_pitch  + pid_yaw;
 
     // サーボ出力を-90~90度の範囲にクランプ
     for (uint8_t i = 0; i < SERVO_COUNT; i++) {
