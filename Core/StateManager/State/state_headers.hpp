@@ -98,6 +98,9 @@ class FlightStateBase : public StateInterface {
         virtual StateError  onInit(StateContext& context)              = 0;
         virtual StateError  onUpdate(StateContext& context)            = 0;
         virtual StateResult onEvaluateNextState(StateContext& context) = 0;
+
+    private:
+        bool pwm_tick_ = false;
 };
 
 class FlightState : public FlightStateBase {

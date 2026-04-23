@@ -8,8 +8,8 @@ static uint8_t icm_spi_write(uint8_t reg_addr, uint8_t* tx_buffer, uint8_t len) 
 
     uint8_t cmd = reg_addr & 0x7Fu; // MSB=0: write
     HAL_GPIO_WritePin(SensorConfig::ICM42688P::CS_PORT, SensorConfig::ICM42688P::CS_PIN, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, &cmd, 1, 10);
-    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, tx_buffer, len, 10);
+    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, &cmd, 1, 100);
+    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, tx_buffer, len, 100);
     HAL_GPIO_WritePin(SensorConfig::ICM42688P::CS_PORT, SensorConfig::ICM42688P::CS_PIN, GPIO_PIN_SET);
     return 0;
 }
@@ -19,8 +19,8 @@ static uint8_t icm_spi_read(uint8_t reg_addr, uint8_t* rx_buffer, uint8_t len) {
 
     uint8_t cmd = reg_addr | 0x80u; // MSB=1: read
     HAL_GPIO_WritePin(SensorConfig::ICM42688P::CS_PORT, SensorConfig::ICM42688P::CS_PIN, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, &cmd, 1, 10);
-    HAL_SPI_Receive(SensorConfig::ICM42688P::SPI_HANDLE, rx_buffer, len, 10);
+    HAL_SPI_Transmit(SensorConfig::ICM42688P::SPI_HANDLE, &cmd, 1, 100);
+    HAL_SPI_Receive(SensorConfig::ICM42688P::SPI_HANDLE, rx_buffer, len, 100);
     HAL_GPIO_WritePin(SensorConfig::ICM42688P::CS_PORT, SensorConfig::ICM42688P::CS_PIN, GPIO_PIN_SET);
     return 0;
 }
