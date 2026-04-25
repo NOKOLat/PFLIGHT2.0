@@ -13,7 +13,13 @@ StateError EmergencyStopState::init(StateContext& context) {
 
 StateError EmergencyStopState::update(StateContext& context) {
 
-    return StateError::CRITICAL_STOPPED;
+    // 緊急停止: モーターを即時停止する
+    if (context.pwm_manager) {
+
+        context.pwm_manager->stop();
+    }
+
+    return StateError::NONE;
 }
 
 

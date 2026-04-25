@@ -15,7 +15,7 @@ namespace CascadePidConfig {
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.5f;
+            constexpr float KP = 1.3f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
@@ -28,7 +28,7 @@ namespace CascadePidConfig {
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.5f;
+            constexpr float KP = 1.3f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
@@ -41,7 +41,7 @@ namespace CascadePidConfig {
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 1.0f;
+            constexpr float KP = 0.75f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }

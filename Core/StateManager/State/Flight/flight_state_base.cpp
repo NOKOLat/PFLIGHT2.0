@@ -60,7 +60,8 @@ StateError FlightStateBase::update(StateContext& context) {
     pwm_tick_ = !pwm_tick_;
     if (pwm_tick_) {
 
-        context.pwm_manager->mix(context.throttle, context.pid_output[0], context.pid_output[1], context.pid_output[2]);
+    	// センサーの向き依存の方向修正をマイナスでやる
+        context.pwm_manager->mix(context.throttle, context.pid_output[0], -context.pid_output[1], -context.pid_output[2]);
         context.pwm_manager->output();
     }
 

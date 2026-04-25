@@ -17,13 +17,13 @@
  * =========================================================== */
 namespace DualcopterConfig {
 
-    inline PwmConfig::PwmChannelConfig MOTOR0 = { &htim1, TIM_CHANNEL_1 };
-    inline PwmConfig::PwmChannelConfig MOTOR1 = { &htim1, TIM_CHANNEL_2 };
+    inline PwmConfig::PwmChannelConfig MOTOR0 = { &htim12, TIM_CHANNEL_1 };
+    inline PwmConfig::PwmChannelConfig MOTOR1 = { &htim12, TIM_CHANNEL_2 };
 
-    inline PwmConfig::PwmChannelConfig SERVO0 = { &htim12, TIM_CHANNEL_1 };
-    inline PwmConfig::PwmChannelConfig SERVO1 = { &htim12, TIM_CHANNEL_2 };
-    inline PwmConfig::PwmChannelConfig SERVO2 = { &htim3, TIM_CHANNEL_1 };
-    inline PwmConfig::PwmChannelConfig SERVO3 = { &htim3, TIM_CHANNEL_2 };
+    inline PwmConfig::PwmChannelConfig SERVO0 = { &htim1, TIM_CHANNEL_1 };
+    inline PwmConfig::PwmChannelConfig SERVO1 = { &htim1, TIM_CHANNEL_2 };
+    inline PwmConfig::PwmChannelConfig SERVO2 = { &htim1, TIM_CHANNEL_3 };
+    inline PwmConfig::PwmChannelConfig SERVO3 = { &htim1, TIM_CHANNEL_4 };
 
 } // namespace DualcopterConfig
 

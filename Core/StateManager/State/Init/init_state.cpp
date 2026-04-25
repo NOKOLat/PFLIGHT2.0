@@ -75,12 +75,6 @@ StateError InitState::update(StateContext& context) {
     // PwmManager 初期化
     context.pwm_manager = std::make_unique<DualcopterPwmManager>();
 
-    if (!context.pwm_manager->init()) {
-
-        printf("[InitState] PwmManager init failed\n");
-        return StateError::UPDATE_FAILED_CRITICAL;
-    }
-
     // CascadePIDManager 初期化（FlightStateで使用）
     context.cascade_pid_manager = std::make_unique<CascadePIDManager>(loop_time_s);
 
