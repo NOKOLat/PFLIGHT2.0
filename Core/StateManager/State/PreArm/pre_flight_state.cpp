@@ -1,4 +1,14 @@
 #include "../state_headers.hpp"
+#include <algorithm>
+
+
+namespace {
+
+constexpr float PREFLIGHT_SERVO_SCALE = 0.4f;
+constexpr float SERVO_MIN_ANGLE_DEG = -90.0f;
+constexpr float SERVO_MAX_ANGLE_DEG = 90.0f;
+
+}
 
 
 StateError PreFlightState::init(StateContext& context) {
@@ -9,9 +19,14 @@ StateError PreFlightState::init(StateContext& context) {
 
 StateError PreFlightState::update(StateContext& context) {
 
-	// サーボを動かす（スロットルは0%, サーボの最大角は40度）
-    context.pwm_manager->setServoDirect(0, context.sbus_data.pitch * 0.4);
-    context.pwm_manager->setServoDirect(1, context.sbus_data.pitch * 0.4);
+    const float pitch = context.sbus_data.pitch * PREFLIGHT_SERVO_SCALE;
+    const float roll = -context.sbus_data.roll * PREFLIGHT_SERVO_SCALE;
+    const float yaw = -context.sbus_data.yaw * PREFLIGHT_SERVO_SCALE;
+
+    context.pwm_manager->setServoDirect(0, std::clamp(-roll + yaw, SERVO_MIN_ANGLE_DEG, SERVO_MAX_ANGLE_DEG));
+    context.pwm_manager->setServoDirect(1, std::clamp(-pitch + yaw, SERVO_MIN_ANGLE_DEG, SERVO_MAX_ANGLE_DEG));
+    context.pwm_manager->setServoDirect(2, std::clamp( roll + yaw, SERVO_MIN_ANGLE_DEG, SERVO_MAX_ANGLE_DEG));
+    context.pwm_manager->setServoDirect(3, std::clamp( pitch + yaw, SERVO_MIN_ANGLE_DEG, SERVO_MAX_ANGLE_DEG));
 
     return StateError::NONE;
 }
@@ -19,13 +34,12 @@ StateError PreFlightState::update(StateContext& context) {
 
 StateResult PreFlightState::evaluateNextState(StateContext& context) {
 
-	if(context.sbus_data.arm !=  SwitchPosition::HIGH){
+    if (context.sbus_data.arm != SwitchPosition::HIGH) {
 
-		return {StateChange::STATE_CHANGE, StateID::PRE_ARM};
-	}
+        return {StateChange::STATE_CHANGE, StateID::PRE_ARM};
+    }
 
-    // Safetyスイッチが有効になったらFlightStateへ遷移
-    if(context.sbus_data.safety == SwitchPosition::HIGH){
+    if (context.sbus_data.safety == SwitchPosition::HIGH) {
 
         return {StateChange::STATE_CHANGE, StateID::FLIGHT};
     }
