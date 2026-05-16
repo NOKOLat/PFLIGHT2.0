@@ -3,6 +3,12 @@
 #include "isr_manager.hpp"
 #include <cstdio>
 
+namespace {
+
+constexpr auto SBUS_TIMEOUT_MS = 50U;
+
+}
+
 
 StateManager::StateManager(StateID init_state_id): init_state_id_(init_state_id) {
 
@@ -26,14 +32,14 @@ bool StateManager::init() {
     if (!fallback_emergency_stop_) {
 
         // 生成失敗 → ログを出して false を返す
-        state_context_.publish_log("[StateManager] CRITICAL: Failed to create EMERGENCY_STOP. Halting.");
+        //state_context_.publish_log("[StateManager] CRITICAL: Failed to create EMERGENCY_STOP. Halting.");
         return false;
     }
 
     // ISRManager に SBUS を登録し、DMA受信を開始する
    // ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.sbus_uart);
 
-    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.debug_sbus_uart);
+    ISRManager::registerSBUS(&state_context_.sbus_receiver, state_context_.sbus_uart);
     state_context_.publish_log("[StateManager] SBUS Ready");
 
     return true;
@@ -42,15 +48,6 @@ bool StateManager::init() {
 // 更新処理（メインループから毎フレーム呼ばれる）
 // EMERGENCY_STOP で停止処理が完了した場合のみ SHUTDOWN を返す
 UpdateResult StateManager::update() {
-
-    // SBUS受信値を最新化する
-    // 受信済みの生データを StateContext の制御用データへ反映する
-    const nokolat::SBUS_DATA& sbus_data = state_context_.sbus_receiver.getData();
-
-    state_context_.sbus_data = nokolat::SBUSRescaler::rescale(sbus_data.data);
-    state_context_.sbus_data.failsafe = sbus_data.failsafe;
-    state_context_.sbus_data.framelost = sbus_data.framelost;
-    state_context_.sbus_data.raw_data = sbus_data.data;
 
     // 初回: 初期状態のインスタンスを生成する
     // init() ではなく update() で生成することで、失敗時にフォールバックへ流せる
@@ -63,6 +60,34 @@ UpdateResult StateManager::update() {
         }
 
         return UpdateResult::CONTINUE;
+    }
+
+    // SBUS受信値を最新化する
+    // 受信済みの生データを StateContext の制御用データへ反映する
+    const nokolat::SBUS_DATA& sbus_data = state_context_.sbus_receiver.getData();
+
+    state_context_.sbus_data = nokolat::SBUSRescaler::rescale(sbus_data.data);
+    state_context_.sbus_data.failsafe = sbus_data.failsafe;
+    state_context_.sbus_data.framelost = sbus_data.framelost;
+    state_context_.sbus_data.raw_data = sbus_data.data;
+
+    const auto now_tick = HAL_GetTick();
+    const auto last_valid_frame_tick = ISRManager::getLastValidFrameTick();
+    const bool sbus_timeout = (now_tick - last_valid_frame_tick) >= SBUS_TIMEOUT_MS;
+
+    if (sbus_timeout) {
+
+        state_context_.sbus_data.failsafe = true;
+        state_context_.sbus_data.framelost = true;
+        state_context_.publish_log("[StateManager] SBUS timeout detected. Falling back to EMERGENCY_STOP.");
+        use_fallback_ = true;
+    }
+
+    // フェイルセーフ検出 → フォールバックへ
+    if(state_context_.sbus_data.failsafe) {
+
+        state_context_.publish_log("[StateManager] SBUS Failsafe Detected");
+        use_fallback_ = true;
     }
 
     // エラー時のフォールバック処理

@@ -57,7 +57,7 @@ StateError FlightState::onUpdate(StateContext& context) {
         context.gyro_data[2]);
     context.throttle = context.sbus_data.throttle;
 
-    printf("PID: P: %.2f, R: %.2f, Y: %.2f | Throttle: %.2f\n", context.pid_output[0], context.pid_output[1], context.pid_output[2], context.throttle);
+   // printf("PID: P: %.2f, R: %.2f, Y: %.2f | Throttle: %.2f\n", context.pid_output[0], context.pid_output[1], context.pid_output[2], context.throttle);
 
     return StateError::NONE;
 }

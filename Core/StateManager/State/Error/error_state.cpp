@@ -15,6 +15,12 @@ StateError ErrorState::init(StateContext& context) {
 
 StateError ErrorState::update(StateContext& context) {
 
+    // 緊急停止: モーターを即時停止する
+    if (context.pwm_manager) {
+
+        context.pwm_manager->stop();
+    }
+
     return StateError::NONE;
 }
 
