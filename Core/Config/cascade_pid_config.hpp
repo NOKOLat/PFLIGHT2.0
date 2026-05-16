@@ -10,12 +10,12 @@ namespace CascadePidConfig {
 
     namespace Pitch {
         namespace Angle {
-            constexpr float KP = 1.0f;
+            constexpr float KP = 0.9f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 1.3f;
+            constexpr float KP = 0.7f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
@@ -23,25 +23,26 @@ namespace CascadePidConfig {
 
     namespace Roll {
         namespace Angle {
-            constexpr float KP = 1.0f;
+            constexpr float KP = 0.9f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 1.3f;
+            constexpr float KP = 0.7f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
     }
 
+    // Angle yawは使用していない
     namespace Yaw {
         namespace Angle {
-            constexpr float KP = 1.0f;
+            constexpr float KP = 0.5f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.75f;
+            constexpr float KP = 0.275f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
