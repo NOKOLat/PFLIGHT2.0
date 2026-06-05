@@ -6,3 +6,8 @@
 
 ## ドキュメント
 
+- [セットアップ](docs/setup.md)
+- [状態遷移](docs/state.md)
+- [Config 一覧](docs/config.md)
+- [Submodule](docs/submodule.md)
+
