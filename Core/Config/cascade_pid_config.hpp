@@ -10,12 +10,12 @@ namespace CascadePidConfig {
 
     namespace Pitch {
         namespace Angle {
-            constexpr float KP = 0.9f;
+            constexpr float KP = 1.0f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.7f;
+            constexpr float KP = 1.25f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
@@ -23,12 +23,12 @@ namespace CascadePidConfig {
 
     namespace Roll {
         namespace Angle {
-            constexpr float KP = 0.9f;
+            constexpr float KP = 1.0f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.7f;
+            constexpr float KP = 1.25f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
@@ -42,7 +42,7 @@ namespace CascadePidConfig {
             constexpr float KD = 0.0f;
         }
         namespace Rate {
-            constexpr float KP = 0.275f;
+            constexpr float KP = 0.25f;
             constexpr float KI = 0.0f;
             constexpr float KD = 0.0f;
         }
