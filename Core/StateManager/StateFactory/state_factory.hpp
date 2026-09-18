@@ -42,6 +42,9 @@ class StateFactory {
                 case StateID::AUTO_FLIGHT:
                     return std::make_unique<AutoFlightState>();
 
+                case StateID::MOTOR_FAILURE_DEMO:
+                    return std::make_unique<MotorFailureDemoState>();
+
                 // --- PostFlight ---
                 case StateID::DIS_ARM:
                     return std::make_unique<DisArmState>();

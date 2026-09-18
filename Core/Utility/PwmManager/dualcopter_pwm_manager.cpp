@@ -65,6 +65,36 @@ void DualcopterPwmManager::mix(float throttle, float pid_pitch, float pid_roll, 
 }
 
 
+bool DualcopterPwmManager::mixSingleMotor(uint8_t active_motor_index,
+                                         float throttle,
+                                         float pid_pitch,
+                                         float pid_roll,
+                                         float pid_yaw) {
+
+    if (active_motor_index >= MOTOR_COUNT) {
+
+        return false;
+    }
+
+    throttle = std::clamp(throttle, 0.0f, 100.0f);
+    motor_output_[0] = 0.0f;
+    motor_output_[1] = 0.0f;
+    motor_output_[active_motor_index] = throttle;
+
+    servo_output_[0] = -pid_roll  + pid_yaw;
+    servo_output_[1] = -pid_pitch + pid_yaw;
+    servo_output_[2] = pid_roll   + pid_yaw;
+    servo_output_[3] = pid_pitch  + pid_yaw;
+
+    for (uint8_t i = 0; i < SERVO_COUNT; i++) {
+
+        servo_output_[i] = std::clamp(servo_output_[i], -90.0f, 90.0f);
+    }
+
+    return true;
+}
+
+
 void DualcopterPwmManager::output() {
 
     for (uint8_t i = 0; i < MOTOR_COUNT; i++) {

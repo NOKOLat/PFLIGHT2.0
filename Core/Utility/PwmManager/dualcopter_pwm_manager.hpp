@@ -30,6 +30,12 @@ class DualcopterPwmManager : public PwmManager {
         // [in] float pid_yaw    - YawのPID出力
         void mix(float throttle, float pid_pitch, float pid_roll, float pid_yaw) override;
 
+        bool mixSingleMotor(uint8_t active_motor_index,
+                            float throttle,
+                            float pid_pitch,
+                            float pid_roll,
+                            float pid_yaw) override;
+
         // motor_output_をモーター0~1に、servo_output_をサーボ0~3に出力する
         void output() override;
 

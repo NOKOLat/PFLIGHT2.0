@@ -1,4 +1,19 @@
 #include "pwm_manager.hpp"
+
+
+bool PwmManager::mixSingleMotor(uint8_t active_motor_index,
+                                float throttle,
+                                float pid_pitch,
+                                float pid_roll,
+                                float pid_yaw) {
+
+    (void)active_motor_index;
+    (void)throttle;
+    (void)pid_pitch;
+    (void)pid_roll;
+    (void)pid_yaw;
+    return false;
+}
 #include <cstdio>
 
 

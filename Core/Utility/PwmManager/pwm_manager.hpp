@@ -37,6 +37,12 @@ class PwmManager {
         // [in] float pid_yaw    - YawのPID出力
         virtual void mix(float throttle, float pid_pitch, float pid_roll, float pid_yaw) = 0;
 
+        virtual bool mixSingleMotor(uint8_t active_motor_index,
+                                    float throttle,
+                                    float pid_pitch,
+                                    float pid_roll,
+                                    float pid_yaw);
+
         // motor_output_/servo_output_をモーター・サーボに出力する
         virtual void output() = 0;
 
