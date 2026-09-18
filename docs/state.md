@@ -101,6 +101,7 @@ IMU、EKF、PWM、PID は遅延初期化されます。
 | `PRE_FLIGHT` | `PreFlightState` | Arm 後、Safety スイッチが入るまでのサーボ追従確認 |
 | `FLIGHT` | `FlightState` | 手動飛行制御、姿勢推定、Cascade PID、PWM ミキシング |
 | `AUTO_FLIGHT` | `AutoFlightState` | 自動飛行モード枠。現状は共通飛行処理のみで独自制御は未実装 |
+| `MOTOR_FAILURE_DEMO` | `MotorFailureDemoState` | 手動飛行制御を継続しながら motor 1 を停止する故障デモ |
 | `DIS_ARM` | `DisArmState` | PWM 停止後、`PRE_ARM` へ戻す |
 | `MOTOR_SERVO_TEST` | `MotorServoTestState` | サーボ・モータの順次テスト |
 | `ERROR` | `ErrorState` | PWM を継続停止し、状態を維持 |
@@ -131,6 +132,9 @@ INIT
 | `PRE_FLIGHT` | `FLIGHT` | `sbus_data.safety == HIGH` |
 | `FLIGHT` | `DIS_ARM` | `sbus_data.arm != HIGH` |
 | `FLIGHT` | `AUTO_FLIGHT` | `sbus_data.auto_mission == HIGH` |
+| `FLIGHT` | `MOTOR_FAILURE_DEMO` | `sbus_data.flight_debug == HIGH` |
+| `MOTOR_FAILURE_DEMO` | `FLIGHT` | `sbus_data.flight_debug != HIGH` |
+| `MOTOR_FAILURE_DEMO` | `DIS_ARM` | `sbus_data.arm != HIGH` |
 | `AUTO_FLIGHT` | `DIS_ARM` | `sbus_data.arm != HIGH` |
 | `AUTO_FLIGHT` | `FLIGHT` | `sbus_data.auto_mission != HIGH` |
 | `DIS_ARM` | `PRE_ARM` | PWM 停止処理後 |

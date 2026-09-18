@@ -98,6 +98,7 @@ class FlightStateBase : public StateInterface {
         virtual StateError  onInit(StateContext& context)              = 0;
         virtual StateError  onUpdate(StateContext& context)            = 0;
         virtual StateResult onEvaluateNextState(StateContext& context) = 0;
+        virtual StateError  mixPwm(StateContext& context);
 
     private:
         bool pwm_tick_ = false;
@@ -125,6 +126,19 @@ class AutoFlightState : public FlightStateBase {
         StateError  onInit(StateContext& context) override;
         StateError  onUpdate(StateContext& context) override;
         StateResult onEvaluateNextState(StateContext& context) override;
+};
+
+class MotorFailureDemoState : public FlightStateBase {
+
+    public:
+        virtual ~MotorFailureDemoState() = default;
+        StateID getStateID() const override;
+
+    protected:
+        StateError  onInit(StateContext& context) override;
+        StateError  onUpdate(StateContext& context) override;
+        StateResult onEvaluateNextState(StateContext& context) override;
+        StateError  mixPwm(StateContext& context) override;
 };
 
 

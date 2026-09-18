@@ -61,10 +61,29 @@ StateError FlightStateBase::update(StateContext& context) {
     if (pwm_tick_) {
 
     	// センサーの向き依存の方向修正をマイナスでやる
-        context.pwm_manager->mix(context.throttle, context.pid_output[0], -context.pid_output[1], -context.pid_output[2]);
+        StateError mix_error = mixPwm(context);
+        if (mix_error != StateError::NONE) {
+
+            return mix_error;
+        }
         context.pwm_manager->output();
     }
 
+    return StateError::NONE;
+}
+
+
+StateError FlightStateBase::mixPwm(StateContext& context) {
+
+    if (!context.pwm_manager) {
+
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
+
+    context.pwm_manager->mix(context.throttle,
+                             context.pid_output[0],
+                             -context.pid_output[1],
+                             -context.pid_output[2]);
     return StateError::NONE;
 }
 

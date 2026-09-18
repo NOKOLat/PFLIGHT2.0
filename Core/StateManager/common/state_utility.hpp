@@ -14,6 +14,7 @@ enum class StateID : uint8_t {
     AUTO_FLIGHT       = 6,
     DIS_ARM           = 7,
     MOTOR_SERVO_TEST  = 8,
+    MOTOR_FAILURE_DEMO = 9,
     ERROR             = 20,
     EMERGENCY_STOP    = 30,   // StateManager フォールバック専用
     INVALID_STATE     = 255
@@ -71,6 +72,7 @@ inline const char* StateIDToString(StateID state_id) {
         case StateID::AUTO_FLIGHT:    return "AUTO_FLIGHT";
         case StateID::DIS_ARM:           return "DIS_ARM";
         case StateID::MOTOR_SERVO_TEST:  return "MOTOR_SERVO_TEST";
+        case StateID::MOTOR_FAILURE_DEMO: return "MOTOR_FAILURE_DEMO";
         case StateID::ERROR:             return "ERROR";
         case StateID::EMERGENCY_STOP: return "EMERGENCY_STOP";
         case StateID::INVALID_STATE:  return "INVALID_STATE";

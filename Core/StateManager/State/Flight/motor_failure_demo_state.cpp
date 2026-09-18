@@ -9,9 +9,9 @@ constexpr float MAX_YAW_RATE_DEG_PER_SEC = CascadePidConfig::Command::YAW_MAX_RA
 }
 
 
-StateError FlightState::onInit(StateContext& context) {
+StateError MotorFailureDemoState::onInit(StateContext& context) {
 
-    if (!context.cascade_pid_manager) {
+    if (!context.cascade_pid_manager || !context.pwm_manager) {
 
         return StateError::UPDATE_FAILED_CRITICAL;
     }
@@ -20,7 +20,7 @@ StateError FlightState::onInit(StateContext& context) {
 }
 
 
-StateError FlightState::onUpdate(StateContext& context) {
+StateError MotorFailureDemoState::onUpdate(StateContext& context) {
 
     if (!context.cascade_pid_manager) {
 
@@ -57,36 +57,46 @@ StateError FlightState::onUpdate(StateContext& context) {
         context.gyro_data[2]);
     context.throttle = context.sbus_data.throttle;
 
-   // printf("PID: P: %.2f, R: %.2f, Y: %.2f | Throttle: %.2f\n", context.pid_output[0], context.pid_output[1], context.pid_output[2], context.throttle);
+    return StateError::NONE;
+}
+
+
+StateError MotorFailureDemoState::mixPwm(StateContext& context) {
+
+    // Motor 0 remains active; motor 1 is held at 0% by the dualcopter mixer.
+    constexpr uint8_t ACTIVE_MOTOR_INDEX = 0;
+
+    if (!context.pwm_manager ||
+        !context.pwm_manager->mixSingleMotor(ACTIVE_MOTOR_INDEX,
+                                             context.throttle,
+                                             context.pid_output[0],
+                                             -context.pid_output[1],
+                                             -context.pid_output[2])) {
+
+        return StateError::UPDATE_FAILED_CRITICAL;
+    }
 
     return StateError::NONE;
 }
 
 
-StateResult FlightState::onEvaluateNextState(StateContext& context) {
+StateResult MotorFailureDemoState::onEvaluateNextState(StateContext& context) {
 
-    // Armスイッチが無効になったらDisArmStateへ遷移
     if(context.sbus_data.arm != SwitchPosition::HIGH){
 
         return {StateChange::STATE_CHANGE, StateID::DIS_ARM};
     }
 
-    if(context.sbus_data.flight_debug == SwitchPosition::HIGH){
+    if(context.sbus_data.flight_debug != SwitchPosition::HIGH){
 
-        return {StateChange::STATE_CHANGE, StateID::MOTOR_FAILURE_DEMO};
+        return {StateChange::STATE_CHANGE, StateID::FLIGHT};
     }
 
-    // Auto Missionスイッチが有効になったらAutoFlightStateへ遷移
-    if(context.sbus_data.auto_mission == SwitchPosition::HIGH){
-
-        return {StateChange::STATE_CHANGE, StateID::AUTO_FLIGHT};
-    }
-
-    return {StateChange::NO_STATE_CHANGE, StateID::FLIGHT};
+    return {StateChange::NO_STATE_CHANGE, StateID::MOTOR_FAILURE_DEMO};
 }
 
 
-StateID FlightState::getStateID() const {
+StateID MotorFailureDemoState::getStateID() const {
 
-    return StateID::FLIGHT;
+    return StateID::MOTOR_FAILURE_DEMO;
 }
