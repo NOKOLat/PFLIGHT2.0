@@ -81,8 +81,8 @@ StateError FlightStateBase::mixPwm(StateContext& context) {
     }
 
     context.pwm_manager->mix(context.throttle,
-                             context.pid_output[0],
                              -context.pid_output[1],
+                             -context.pid_output[0],
                              -context.pid_output[2]);
     return StateError::NONE;
 }

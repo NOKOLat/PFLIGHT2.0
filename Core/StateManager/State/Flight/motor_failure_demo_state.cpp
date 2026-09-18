@@ -69,8 +69,8 @@ StateError MotorFailureDemoState::mixPwm(StateContext& context) {
     if (!context.pwm_manager ||
         !context.pwm_manager->mixSingleMotor(ACTIVE_MOTOR_INDEX,
                                              context.throttle,
-                                             context.pid_output[0],
                                              -context.pid_output[1],
+                                             -context.pid_output[0],
                                              -context.pid_output[2])) {
 
         return StateError::UPDATE_FAILED_CRITICAL;

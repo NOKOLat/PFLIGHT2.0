@@ -19,6 +19,12 @@ StateError EmergencyStopState::update(StateContext& context) {
         context.pwm_manager->stop();
     }
 
+    printf("---------------------------------------------------------------------------\n\n");
+    printf("[EmergencyStopState] EMERGENCY_STOP: System halted. Please reset the system.\n\n");
+    printf("---------------------------------------------------------------------------\n");
+
+        while(1);
+
     return StateError::NONE;
 }
 
@@ -30,6 +36,6 @@ StateResult EmergencyStopState::evaluateNextState(StateContext& context) {
 
 
 StateID EmergencyStopState::getStateID() const {
-    
+
     return StateID::EMERGENCY_STOP;
 }
