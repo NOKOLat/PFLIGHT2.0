@@ -31,11 +31,11 @@ StateError MotorFailureDemoState::onUpdate(StateContext& context) {
     const auto& thresholds = nokolat::SBUSRescaler::default_thresholds;
 
     const float target_pitch_deg = nokolat::SBUSRescaler::sbusToAngle(
-        context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::PITCH)],
+        context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::ROLL)],
         thresholds.pitch,
         MAX_COMMAND_ANGLE_DEG);
     const float target_roll_deg = nokolat::SBUSRescaler::sbusToAngle(
-        context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::ROLL)],
+        context.sbus_data.raw_data[static_cast<uint8_t>(nokolat::SBUSChannel::PITCH)],
         thresholds.roll,
         MAX_COMMAND_ANGLE_DEG);
     const float target_yaw_rate_deg_per_sec = nokolat::SBUSRescaler::sbusToRate(
